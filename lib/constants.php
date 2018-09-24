@@ -1,5 +1,5 @@
 <?php
-define('DATABASE_NAME', 'NGEFFEN_Sample');
+define('DATABASE_NAME', 'NGEFFEN_lab4');
 define('DATABASE_READER', 'ngeffen_reader');
 define('DATABASE_READER_PWD', 'r');
 define('DATABASE_WRITER_PWD', 'w');
