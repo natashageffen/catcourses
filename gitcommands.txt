@@ -1,7 +1,3 @@
-Git global setup
-git config --global user.name "Natasha R Geffen"
-git config --global user.email "natasha.geffen@uvm.edu"
-
 Create a new repository
 git clone git@gitlab.uvm.edu:Natasha.Geffen/CS-148-lab4.git
 cd CS-148-lab4
