@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Bob, DB Example</title>
+        <title>VT Hiking</title>
         <meta charset="utf-8">
-        <meta name="author" content="Robert Erickson">
-        <meta name="description" content="Bob, Thank you for the example">
+        <meta name="author" content="Natasha Geffen">
+        <meta name="description" content="A database for VT's trails and hikers">
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
