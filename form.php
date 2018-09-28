@@ -24,13 +24,11 @@ print PHP_EOL . '<!-- SECTION: 1b form variables -->' . PHP_EOL;
 // Initialize variables one for each form element
 // in the order they appear on the form
 
-$firstName = "";
-
-$lastName = "";
-
 $date = "Enter date";     
 
 $pmkHikersId = "";
+
+$pmkTrailsId = "";
 
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^% 
@@ -39,8 +37,7 @@ print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
 //
 // Initialize Error Flags one for each form element we validate
 // in the order they appear on the form
-$firstNameERROR = false;
-$lastNameERROR = false;
+
 $dateERROR = false;    
 $hikerERROR = false;
 $trailERROR = false;
@@ -80,9 +77,7 @@ if (isset($_POST["btnSubmit"])) {
     // remove any potential JavaScript or html code from users input on the
     // form. Note it is best to follow the same order as declared in section 1c.
 
-    $firstName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");
     
-    $lastName = htmlentities($_POST["txtLastName"], ENT_QUOTES, "UTF-8");
     
     $date = filter_var($_POST["txtDate"], FILTER_SANITIZE_EMAIL);       
         
@@ -99,22 +94,7 @@ if (isset($_POST["btnSubmit"])) {
     // order that the elements appear on your form so that the error messages
     // will be in the order they appear. errorMsg will be displayed on the form
     // see section 3b. The error flag ($emailERROR) will be used in section 3c.
-    if ($firstName == "") {
-        $errorMsg[] = "Please enter your first name";
-        $firstNameERROR = true;
-    } elseif (!verifyAlphaNum($firstName)) {
-        $errorMsg[] = "Your first name appears to have extra characters.";
-        $firstNameERROR = true;
-    }
-    
-     if ($lastName == "") {
-        $errorMsg[] = "Please enter your last name";
-        $lastNameERROR = true;
-    } elseif (!verifyAlphaNum($lastName)) {
-        $errorMsg[] = "Your last name appears to have extra characters.";
-        $lastNameERROR = true;
-    }
-    
+ 
     if ($date == "") {
         $errorMsg[] = 'Please enter a date';
         $dateERROR = true;
@@ -239,7 +219,8 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
         print '<p>To: ' . $email . '</p>';
     
         print $message;
-    } else {       
+    } else {  
+        
      print '<h2>Tell us about your hike.</h2>';
      
      
@@ -284,54 +265,8 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
 <form action = "<?php print $phpSelf; ?>"
           id = "frmRegister"
           method = "post">
-
-                <fieldset class = "contact">
-                   
-                    <p>
-                        <label class="required" for="txtFirstName">First Name</label>  
-                        <input autofocus
-                                <?php if ($firstNameERROR) print 'class="mistake"'; ?>
-                                id="txtFirstName"
-                                maxlength="45"
-                                name="txtFirstName"
-                                onfocus="this.select()"
-                                placeholder="Enter your first name"
-                                tabindex="100"
-                                type="text"
-                                value="<?php print $firstName; ?>"                    
-                        >                    
-                    </p>
-                     <p>
-                        <label class="required" for="txtLastName">Last Name</label>  
-                        <input autofocus
-                                <?php if ($lastNameERROR) print 'class="mistake"'; ?>
-                                id="txtLastName"
-                                maxlength="45"
-                                name="txtLastName"
-                                onfocus="this.select()"
-                                placeholder="Enter your last name"
-                                tabindex="100"
-                                type="text"
-                                value="<?php print $lastName; ?>"                    
-                        >                    
-                    </p>
-                    <p>
-                        <label class = "required" for = "txtDate">Date</label>
-                            <input 
-                                   <?php if ($dateERROR) print 'class="mistake"'; ?>
-                                   id = "txtDate"     
-                                   maxlength = "45"
-                                   name = "txtDate"
-                                   onfocus = "this.select()"
-                                   placeholder = "Enter a date"
-                                   tabindex = "120"
-                                   type = "text"
-                                   value = "<?php print $date; ?>"
-                            >
-                    </p>     
-                </fieldset> <!-- ends contact -->
-                  <fieldset class="listbox" <?php if ($placeERROR) print ' mistake'; ?>">
-        <legend>Select a hiker:</legend>
+                <fieldset class="listbox" <?php if ($placeERROR) print ' mistake'; ?>">
+        <legend>Name:</legend>
         <select id="1stPlaces"
                 name="1stPlaces"
                 tabindex="520">
@@ -353,6 +288,82 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
         </select>
 
     
+    </fieldset>
+                <fieldset class = "date">
+                   
+               
+                    <p>
+                        <label class = "required" for = "txtDate">Date:</label>
+                            <input 
+                                   <?php if ($dateERROR) print 'class="mistake"'; ?>
+                                   id = "txtDate"     
+                                   maxlength = "45"
+                                   name = "txtDate"
+                                   onfocus = "this.select()"
+                                   placeholder = "Enter a date"
+                                   tabindex = "120"
+                                   type = "text"
+                                   value = "<?php print $date; ?>"
+                            >
+                    </p>     
+                </fieldset> <!-- ends contact -->
+                  <fieldset class="radio <?php if ($trailERROR) print ' mistake'; ?>">
+        <legend>Trail:</legend>
+        <p>
+            <label class="radio-field">
+                <input type="radio"
+                       id="radTrailCamelsHump"
+                       name="radTrail"
+                       value="CamelsHump"
+                       tabindex="572"
+                       <?php if ($gender == "Camel's Hump") echo ' checked="checked" '; ?>>
+                Camel's Hump
+            </label>
+        </p>
+        <p>
+            <label class="radio-field">
+                <input type="radio"
+                       id="radTrailSnakeMountain"
+                       name="radTrail"
+                       value="SnakeMountain"
+                       tabindex="582"
+                       <?php if ($gender == "Snake Mountain") echo ' checked="checked" '; ?>>
+                Snake Mountain
+            </label>
+        </p>
+        <p>
+            <label class="radio-field">
+                <input type="radio"
+                       id="radTrailProspectRock"
+                       name="radTrail"
+                       value="ProspectRock"
+                       tabindex="582"
+                       <?php if ($gender == "Prospect Rock") echo ' checked="checked" '; ?>>
+                Prospect Rock
+            </label>
+        </p>
+         <p>
+            <label class="radio-field">
+                <input type="radio"
+                       id="radTrailSkylightPond"
+                       name="radTrail"
+                       value="SkylightPond"
+                       tabindex="582"
+                       <?php if ($gender == "Skylight Pond") echo ' checked="checked" '; ?>>
+                Skylight Pond
+            </label>
+        </p>
+         <p>
+            <label class="radio-field">
+                <input type="radio"
+                       id="radTrailMountPisgah"
+                       name="radTrail"
+                       value="MountPisgah"
+                       tabindex="582"
+                       <?php if ($gender == "Mount Pisgah") echo ' checked="checked" '; ?>>
+                Mount Pisgah
+            </label>
+        </p>
     </fieldset>
             <fieldset class="buttons">
                 <legend></legend>
