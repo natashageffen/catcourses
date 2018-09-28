@@ -24,18 +24,20 @@ print PHP_EOL . '<!-- SECTION: 1b form variables -->' . PHP_EOL;
 // Initialize variables one for each form element
 // in the order they appear on the form
 
-$firstName = "";       
+$firstName = "";
 
-$email = "your-email@uvm.edu";     
+$lastName = "";
 
-//%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
+$date = "Enter date";     
+
+//%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^% 
 //
 print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
 //
 // Initialize Error Flags one for each form element we validate
 // in the order they appear on the form
 $firstNameERROR = false;
-$emailERROR = false;       
+$dateERROR = false;       
 
 ////%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -45,7 +47,7 @@ print PHP_EOL . '<!-- SECTION: 1d misc variables -->' . PHP_EOL;
 $errorMsg = array();       
  
 // have we mailed the information to the user, flag variable?
-$mailed = false;       
+//$mailed = false;       
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
@@ -72,9 +74,11 @@ if (isset($_POST["btnSubmit"])) {
     // remove any potential JavaScript or html code from users input on the
     // form. Note it is best to follow the same order as declared in section 1c.
 
-    $firstName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");       
+    $firstName = htmlentities($_POST["txtFirstName"], ENT_QUOTES, "UTF-8");
     
-    $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL);       
+    $lastName = htmlentities($_POST["txtLastName"], ENT_QUOTES, "UTF-8");
+    
+    $date = filter_var($_POST["txtDate"], FILTER_SANITIZE_EMAIL);       
         
     
     
@@ -93,16 +97,24 @@ if (isset($_POST["btnSubmit"])) {
         $errorMsg[] = "Please enter your first name";
         $firstNameERROR = true;
     } elseif (!verifyAlphaNum($firstName)) {
-        $errorMsg[] = "Your first name appears to have extra character.";
+        $errorMsg[] = "Your first name appears to have extra characters.";
         $firstNameERROR = true;
     }
     
-    if ($email == "") {
-        $errorMsg[] = 'Please enter your email address';
-        $emailERROR = true;
-    } elseif (!verifyEmail($email)) {       
-        $errorMsg[] = 'Your email address appears to be incorrect.';
-        $emailERROR = true;    
+     if ($lastName == "") {
+        $errorMsg[] = "Please enter your last name";
+        $lastNameERROR = true;
+    } elseif (!verifyAlphaNum($lastName)) {
+        $errorMsg[] = "Your last name appears to have extra characters.";
+        $lastNameERROR = true;
+    }
+    
+    if ($date == "") {
+        $errorMsg[] = 'Please enter a date';
+        $dateERROR = true;
+    } elseif (!verifyDate($date)) {       
+        $errorMsg[] = 'This date appears to be incorrect.';
+        $dateERROR = true;    
     }    
     
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -222,8 +234,8 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
     
         print $message;
     } else {       
-     print '<h2>Register Today</h2>';
-     print '<p class="form-heading">Your information will greatly help us with our research.</p>';
+     print '<h2>Tell us about your hike!</h2>';
+     
      
         //####################################
         //
@@ -268,7 +280,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
           method = "post">
 
                 <fieldset class = "contact">
-                    <legend>Contact Information</legend>
+                   
                     <p>
                         <label class="required" for="txtFirstName">First Name</label>  
                         <input autofocus
@@ -283,19 +295,32 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                                 value="<?php print $firstName; ?>"                    
                         >                    
                     </p>
-                    
+                     <p>
+                        <label class="required" for="txtLastName">Last Name</label>  
+                        <input autofocus
+                                <?php if ($lastNameERROR) print 'class="mistake"'; ?>
+                                id="txtLastName"
+                                maxlength="45"
+                                name="txtLastName"
+                                onfocus="this.select()"
+                                placeholder="Enter your last name"
+                                tabindex="100"
+                                type="text"
+                                value="<?php print $lastName; ?>"                    
+                        >                    
+                    </p>
                     <p>
-                        <label class = "required" for = "txtEmail">Email</label>
+                        <label class = "required" for = "txtDate">Date</label>
                             <input 
-                                   <?php if ($emailERROR) print 'class="mistake"'; ?>
-                                   id = "txtEmail"     
+                                   <?php if ($dateERROR) print 'class="mistake"'; ?>
+                                   id = "txtDate"     
                                    maxlength = "45"
-                                   name = "txtEmail"
+                                   name = "txtDate"
                                    onfocus = "this.select()"
-                                   placeholder = "Enter your email address"
+                                   placeholder = "Enter a date"
                                    tabindex = "120"
                                    type = "text"
-                                   value = "<?php print $email; ?>"
+                                   value = "<?php print $date; ?>"
                             >
                     </p>     
                 </fieldset> <!-- ends contact -->
