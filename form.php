@@ -30,6 +30,9 @@ $lastName = "";
 
 $date = "Enter date";     
 
+$pmkHikersId = "";
+
+
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^% 
 //
 print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
@@ -37,7 +40,10 @@ print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
 // Initialize Error Flags one for each form element we validate
 // in the order they appear on the form
 $firstNameERROR = false;
-$dateERROR = false;       
+$lastNameERROR = false;
+$dateERROR = false;    
+$hikerERROR = false;
+$trailERROR = false;
 
 ////%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -139,7 +145,7 @@ if (isset($_POST["btnSubmit"])) {
         
         // assign values to the dataRecord array
         $dataRecord[] = $firstName;
-        $dataRecord[] = $email;
+        $dataRecord[] = $date;
     
         // setup csv file
         $myFolder = 'data/';
@@ -234,7 +240,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
     
         print $message;
     } else {       
-     print '<h2>Tell us about your hike!</h2>';
+     print '<h2>Tell us about your hike.</h2>';
      
      
         //####################################
@@ -324,7 +330,30 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                             >
                     </p>     
                 </fieldset> <!-- ends contact -->
+                  <fieldset class="listbox" <?php if ($placeERROR) print ' mistake'; ?>">
+        <legend>Select a hiker:</legend>
+        <select id="1stPlaces"
+                name="1stPlaces"
+                tabindex="520">
+            <option <?php if ($pmkHikersId == "Spongebob Squarepants") print " selected "; ?>
+                value="SpongebobSquarepants">Spongebob Squarepants</option>
 
+            <option <?php if ($pmkHikersId == "Patrick Star") print " selected "; ?>
+                value="PatrickStar">Patrick Star</option>
+
+            <option <?php if ($pmkHikersId == "Squidward Tentacles") print " selected "; ?>
+                value="SquidwardTentacles">Squidward Tentacles</option>
+            
+            <option <?php if ($pmkHikersId == "Eugene Krabs") print " selected "; ?>
+                value="EugeneKrabs">Eugene Krabs</option>
+            
+            <option <?php if ($pmkHikersId == "Sandy Cheeks") print " selected "; ?>
+                value="SandyCheeks">Sandy Cheeks</option>
+
+        </select>
+
+    
+    </fieldset>
             <fieldset class="buttons">
                 <legend></legend>
                 <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Register" >
