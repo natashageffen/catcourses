@@ -24,11 +24,11 @@ print PHP_EOL . '<!-- SECTION: 1b form variables -->' . PHP_EOL;
 // Initialize variables one for each form element
 // in the order they appear on the form
 
-$date = "Enter date";     
+$date = "YYYY-MM-DD";    
 
-$pmkHikersId = "";
+$pmkHikersId;
 
-$pmkTrailsId = "";
+$pmkTrailsId;
 
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^% 
@@ -38,7 +38,7 @@ print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
 // Initialize Error Flags one for each form element we validate
 // in the order they appear on the form
 
-$dateERROR = false;    
+$dateERROR = false; 
 $hikerERROR = false;
 $trailERROR = false;
 
@@ -78,10 +78,14 @@ if (isset($_POST["btnSubmit"])) {
     // form. Note it is best to follow the same order as declared in section 1c.
 
     
+    $date = htmlentities($_POST["txtYear"], ENT_QUOTES, "UTF-8");   
+    $dataRecord[] = $year;
     
-    $date = filter_var($_POST["txtDate"], FILTER_SANITIZE_EMAIL);       
-        
+    $pmkTrailsId = (int) htmlentities($_POST["radTrail"], ENT_QUOTES, "UTF-8");
+    $dataRecord[] = $pmkTrailsId;
     
+    $pmkHikersId = (int) htmlentities($_POST["radHiker"], ENT_QUOTES, "UTF-8");
+    $dataRecord[] = $pmkHikersId;
     
     
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -98,7 +102,11 @@ if (isset($_POST["btnSubmit"])) {
     if ($date == "") {
         $errorMsg[] = 'Please enter a date';
         $dateERROR = true;
-    } elseif (!verifyDate($date)) {       
+    
+        
+    }
+    elseif (!checkmydate($date)) 
+    {       
         $errorMsg[] = 'This date appears to be incorrect.';
         $dateERROR = true;    
     }    
@@ -124,7 +132,6 @@ if (isset($_POST["btnSubmit"])) {
         $dataRecord = array();       
         
         // assign values to the dataRecord array
-        $dataRecord[] = $firstName;
         $dataRecord[] = $date;
     
         // setup csv file
@@ -294,17 +301,19 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                
                     <p>
                         <label class = "required" for = "txtDate">Date:</label>
+                           
                             <input 
                                    <?php if ($dateERROR) print 'class="mistake"'; ?>
                                    id = "txtDate"     
                                    maxlength = "45"
                                    name = "txtDate"
                                    onfocus = "this.select()"
-                                   placeholder = "Enter a date"
+                                   placeholder = "YYYY"
                                    tabindex = "120"
                                    type = "text"
                                    value = "<?php print $date; ?>"
                             >
+                            
                     </p>     
                 </fieldset> <!-- ends contact -->
                   <fieldset class="radio <?php if ($trailERROR) print ' mistake'; ?>">

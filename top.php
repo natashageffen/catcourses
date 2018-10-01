@@ -22,6 +22,10 @@
         // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
         print '<!-- begin including libraries -->';
         
+        include 'lib/security.php';
+        
+        include 'lib/validaton-functions.php';
+        
         include 'lib/constants.php';
 
         include LIB_PATH . '/Connect-With-Database.php';
