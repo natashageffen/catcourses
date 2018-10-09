@@ -24,7 +24,7 @@
         
         include 'lib/security.php';
         
-        include 'lib/validaton-functions.php';
+      include 'lib/validation-functions.php';
         
         include 'lib/constants.php';
 

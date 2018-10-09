@@ -1,5 +1,6 @@
 <?php
 include 'top.php';
+
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //       
 print  PHP_EOL . '<!-- SECTION: 1 Initialize variables -->' . PHP_EOL;       
@@ -42,6 +43,7 @@ $dateERROR = false;
 $hikerERROR = false;
 $trailERROR = false;
 
+
 ////%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 print PHP_EOL . '<!-- SECTION: 1d misc variables -->' . PHP_EOL;
@@ -65,11 +67,11 @@ if (isset($_POST["btnSubmit"])) {
     // the url for this form
     $thisURL = $domain . $phpSelf;
     
-    if (!securityCheck($thisURL)) {
-        $msg = '<p>Sorry you cannot access this page.</p>';
-        $msg.= '<p>Security breach detected and reported.</p>';
-        die($msg);
-    }
+//    if (!securityCheck($thisURL)) {
+//        $msg = '<p>Sorry you cannot access this page.</p>';
+//        $msg.= '<p>Security breach detected and reported.</p>';
+//        die($msg); 
+//    }
 
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
@@ -78,13 +80,13 @@ if (isset($_POST["btnSubmit"])) {
     // form. Note it is best to follow the same order as declared in section 1c.
 
     
-    $date = htmlentities($_POST["txtYear"], ENT_QUOTES, "UTF-8");   
+    $date = htmlentities($_POST["txtDate"], ENT_QUOTES, "UTF-8");   
     $dataRecord[] = $year;
     
     $pmkTrailsId = (int) htmlentities($_POST["radTrail"], ENT_QUOTES, "UTF-8");
     $dataRecord[] = $pmkTrailsId;
     
-    $pmkHikersId = (int) htmlentities($_POST["radHiker"], ENT_QUOTES, "UTF-8");
+    $pmkHikersId = (int) htmlentities($_POST["1stPlaces"], ENT_QUOTES, "UTF-8");
     $dataRecord[] = $pmkHikersId;
     
     
@@ -98,14 +100,15 @@ if (isset($_POST["btnSubmit"])) {
     // order that the elements appear on your form so that the error messages
     // will be in the order they appear. errorMsg will be displayed on the form
     // see section 3b. The error flag ($emailERROR) will be used in section 3c.
- 
+    
+            
     if ($date == "") {
         $errorMsg[] = 'Please enter a date';
         $dateERROR = true;
     
         
     }
-    elseif (!checkmydate($date)) 
+    elseif (!verifyDate($date)) 
     {       
         $errorMsg[] = 'This date appears to be incorrect.';
         $dateERROR = true;    
