@@ -13,9 +13,21 @@ print PHP_EOL . '<!-- SECTION: 1a. debugging setup -->' . PHP_EOL;
 // display it. when you first come to the form it is empty. when you submit the
 // form it displays the contents of the post array.
 // if ($debug){ 
+
+?>
+
+
+<main>
+    <?php
 print '<p>Post Array:</p><pre>';
 print_r($_POST);
 print '</pre>';
+?>
+</main>
+
+<?php
+
+
 // }
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -154,18 +166,23 @@ if (isset($_POST["btnSubmit"])) {
         $query = "INSERT INTO tblTrails(fnkHikersId, fnkTrailsId, fldDateHiked) ";
         $query .= "VALUES(?, ?, ?)";
 
-        print $query;
-        print_r($dataRecord);
+       // print $query;
+        //print_r($dataRecord);
         if ($thisDatabaseWriter->querySecurityOk($query, 0)) {
             $query = $thisDatabaseReader->sanitizeQuery($query);
             $records = $thisDatabaseWriter->insert($query, $dataRecord);
         }
-
+            ?>
+<main>
+            <?php
         if ($records) {
             print '<p>Record Saved</p>';
         } else {
             print '<p>Record NOT Saved</p>';
         }
+        ?>
+</main>
+        <?php
         /* // setup csv file
           $myFolder = 'data/';
           $myFileName = 'registration';
@@ -311,54 +328,56 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                   id = "frmRegister"
                   method = "post">
                 <fieldset class="listbox" <?php if ($placeERROR) print ' mistake'; ?>">
+                    
+                    
                     <?php
-                    print "<h2>Name:</h2>";
-
-                    print '<label for="lstHikers"';
-                    if ($buildingERROR) {
-                        print ' class = "mistake"';
-                    }
-                    print '>Hiker ';
-                    print '<select id="lstHikers" ';
-                    print '        name="lstHikers"';
-                    print '        tabindex="300" >';
-
-
-                    foreach ($hikers as $hiker) {
-
-                        print '<option ';
-                        if ($pmkHikersId == $hiker["pmkHikersId"])
-                            print " selected='selected' ";
-
-                        print 'value="' . $hiker["pmkHikersId"] . '">' . $hiker["fldFirstName"] . $hiker["fldLastName"];
-
-                        print '</option>';
-                    }
-
-                    print '</select></label>';
-
-                    print '</form>';
-                    ?>          
-                    <!--                    <legend>Name:</legend>
-                                        <select id="1stPlaces"
-                                                name="1stPlaces"
+//                    print "<h2>Name:</h2>";
+//
+//                    print '<label for="lstHikers"';
+//                    if ($buildingERROR) {
+//                        print ' class = "mistake"';
+//                    }
+//                    print '>Hiker ';
+//                    print '<select id="lstHikers" ';
+//                    print '        name="lstHikers"';
+//                    print '        tabindex="300" >';
+//
+//
+//                    foreach ($hikers as $hiker) {
+//
+//                        print '<option ';
+//                        if ($pmkHikersId == $hiker["pmkHikersId"])
+//                            print " selected='selected' ";
+//
+//                        print 'value="' . $hiker["pmkHikersId"] . '">' . $hiker["fldFirstName"] . $hiker["fldLastName"];
+//
+//                        print '</option>';
+//                    }
+//
+//                    print '</select></label>';
+//
+//                    print '</form>';
+//                    ?>          
+                                        <legend>Name:</legend>
+                                        <select id="lstHikers"
+                                                name="lstHikers"
                                                 tabindex="520">
-                                            <option </?php if ($pmkHikersId == "1") print " selected "; ?>
+                                            <option <?php if ($pmkHikersId == "1") print " selected "; ?>
                                                 value="1">Spongebob Squarepants</option>
                     
-                                            <option </?php if ($pmkHikersId == "2") print " selected "; ?>
+                                            <option <?php if ($pmkHikersId == "2") print " selected "; ?>
                                                 value="2">Patrick Star</option>
                     
-                                            <option </?php if ($pmkHikersId == "3") print " selected "; ?>
+                                            <option <?php if ($pmkHikersId == "3") print " selected "; ?>
                                                 value="3">Squidward Tentacles</option>
                     
-                                            <option </?php if ($pmkHikersId == "4") print " selected "; ?>
+                                            <option <?php if ($pmkHikersId == "4") print " selected "; ?>
                                                 value="4">Eugene Krabs</option>
                     
-                                            <option </?php if ($pmkHikersId == "5") print " selected "; ?>
+                                            <option <?php if ($pmkHikersId == "5") print " selected "; ?>
                                                 value="5">Sandy Cheeks</option>
                     
-                                        </select>-->
+                                        </select>
 
 
                 </fieldset>

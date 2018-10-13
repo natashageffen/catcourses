@@ -30,6 +30,7 @@ img{
 
 main {
     background: rgba(204, 204, 204, 0.9);
+    padding: 20px;
 }
 
 
@@ -91,7 +92,16 @@ nav ol li{
 }
     nav{
     text-align: center;
+    padding: 20px;
 
+}
+
+nav a{
+    color: black;
+    text-decoration: none;
+    font-size: larger;
+    background: rgba(204, 204, 204, 0.9);
+    padding: 2px;
 }
 
 /*------------------------   table page  only  ------------------------------ */
@@ -106,15 +116,6 @@ nav ol li{
     height: 600px; 
     float: left; 
     overflow: auto;
-}
-#table table{
-    border: medium #000080 solid;
-    border-collapse: collapse;
-}
-
-#table td {
-    border: thin #000080 solid;
-    border-collapse: collapse;
 }
 
 #table th{
