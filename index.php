@@ -16,7 +16,9 @@ if ($thisDatabaseReader->querySecurityOk($query, 0)) {
     $records = $thisDatabaseReader->select($query, '');
     
 }
-
+?>
+<main>
+<?php
 if (DEBUG) {
     print '<p>Contents of the array<pre>';
     print_r($records);
@@ -31,3 +33,4 @@ if (is_array($records)) {
 }
 include 'footer.php';
 ?>
+</main>

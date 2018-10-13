@@ -16,6 +16,10 @@ if (isset($_GET['getRecordsFor'])) {
     $tableName = htmlentities($_GET['getRecordsFor'], ENT_QUOTES, "UTF-8");
 }
 
+?>
+
+<main>
+<?php
 // Begin output
 print '<article>';
 print '<h2>Database: ' . DATABASE_NAME . '</h2>';
@@ -148,3 +152,5 @@ if ($tableName != "") {
 print '</article>';
 include "footer.php";
 ?>
+
+</main>
