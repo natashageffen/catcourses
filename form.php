@@ -13,21 +13,18 @@ print PHP_EOL . '<!-- SECTION: 1a. debugging setup -->' . PHP_EOL;
 // display it. when you first come to the form it is empty. when you submit the
 // form it displays the contents of the post array.
 // if ($debug){ 
-
 ?>
 
 
 <main>
     <?php
-print '<p>Post Array:</p><pre>';
-print_r($_POST);
-print '</pre>';
-?>
+    print '<p>Post Array:</p><pre>';
+    print_r($_POST);
+    print '</pre>';
+    ?>
 </main>
 
 <?php
-
-
 // }
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -166,220 +163,222 @@ if (isset($_POST["btnSubmit"])) {
         $query = "INSERT INTO tblTrails(fnkHikersId, fnkTrailsId, fldDateHiked) ";
         $query .= "VALUES(?, ?, ?)";
 
-       // print $query;
+        // print $query;
         //print_r($dataRecord);
         if ($thisDatabaseWriter->querySecurityOk($query, 0)) {
             $query = $thisDatabaseReader->sanitizeQuery($query);
             $records = $thisDatabaseWriter->insert($query, $dataRecord);
         }
-            ?>
-<main>
-            <?php
+        ?>
+        <main>
+        <?php
         if ($records) {
             print '<p>Record Saved</p>';
         } else {
             print '<p>Record NOT Saved</p>';
         }
         ?>
-</main>
-        <?php
-        /* // setup csv file
-          $myFolder = 'data/';
-          $myFileName = 'registration';
-          $fileExt = '.csv';
-          $filename = $myFolder . $myFileName . $fileExt;
+        </main>
+            <?php
+            /* // setup csv file
+              $myFolder = 'data/';
+              $myFileName = 'registration';
+              $fileExt = '.csv';
+              $filename = $myFolder . $myFileName . $fileExt;
 
-          if ($debug)
-          print PHP_EOL . '<p>filename is ' . $filename;
+              if ($debug)
+              print PHP_EOL . '<p>filename is ' . $filename;
 
-          // now we just open the file for append
-          $file = fopen($filename, 'a');
+              // now we just open the file for append
+              $file = fopen($filename, 'a');
 
-          // write the forms informations
-          fputcsv($file, $dataRecord);
+              // write the forms informations
+              fputcsv($file, $dataRecord);
 
-          // close the file
-          fclose($file);
-         */
+              // close the file
+              fclose($file);
+             */
 
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        //
+            //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            //
         print PHP_EOL . '<!-- SECTION: 2f Create message -->' . PHP_EOL;
-        //
-        // build a message to display on the screen in section 3a and to mail
-        // to the person filling out the form (section 2g).
+            //
+            // build a message to display on the screen in section 3a and to mail
+            // to the person filling out the form (section 2g).
 
-        $message = '<h2>Your  information.</h2>';
+            $message = '<h2>Your  information.</h2>';
 
-        foreach ($_POST as $htmlName => $value) {
+            foreach ($_POST as $htmlName => $value) {
 
-            $message .= '<p>';
-            // breaks up the form names into words. for example
-            // txtFirstName becomes First Name       
-            $camelCase = preg_split('/(?=[A-Z])/', substr($htmlName, 3));
+                $message .= '<p>';
+                // breaks up the form names into words. for example
+                // txtFirstName becomes First Name       
+                $camelCase = preg_split('/(?=[A-Z])/', substr($htmlName, 3));
 
-            foreach ($camelCase as $oneWord) {
-                $message .= $oneWord . ' ';
+                foreach ($camelCase as $oneWord) {
+                    $message .= $oneWord . ' ';
+                }
+
+                $message .= ' = ' . htmlentities($value, ENT_QUOTES, "UTF-8") . '</p>';
             }
 
-            $message .= ' = ' . htmlentities($value, ENT_QUOTES, "UTF-8") . '</p>';
-        }
-
-        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        //
+            //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            //
         print PHP_EOL . '<!-- SECTION: 2g Mail to user -->' . PHP_EOL;
-        //
-        // Process for mailing a message which contains the forms data
-        // the message was built in section 2f.
-        $to = $email; // the person who filled out the form     
-        $cc = '';
-        $bcc = '';
+            //
+            // Process for mailing a message which contains the forms data
+            // the message was built in section 2f.
+            $to = $email; // the person who filled out the form     
+            $cc = '';
+            $bcc = '';
 
-        $from = 'WRONG site <customer.service@your-site.com>';
+            $from = 'WRONG site <customer.service@your-site.com>';
 
-        // subject of mail should make sense to your form
-        $subject = 'Groovy: ';
+            // subject of mail should make sense to your form
+            $subject = 'Groovy: ';
 
-        $mailed = sendMail($to, $cc, $bcc, $from, $subject, $message);
-    } // end form is valid     
-}   // ends if form was submitted.
+            $mailed = sendMail($to, $cc, $bcc, $from, $subject, $message);
+        } // end form is valid     
+    }   // ends if form was submitted.
 //#############################################################################
 //
-print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
+    print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
 //
-?>       
+    ?>       
 <main>     
     <article>
-        <?php
+<?php
 //####################################
 //
-        print PHP_EOL . '<!-- SECTION 3a  -->' . PHP_EOL;
+print PHP_EOL . '<!-- SECTION 3a  -->' . PHP_EOL;
 // 
 // If its the first time coming to the form or there are errors we are going
 // to display the form.
 
-        if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-            print '<h2>Thank you for providing your information.</h2>';
+if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
+    print '<h2>Thank you for providing your information.</h2>';
 
-            print '<p>For your records a copy of this data has ';
-            if (!$mailed) {
-                print "not ";
-            }
+    print '<p>For your records a copy of this data has ';
+    if (!$mailed) {
+        print "not ";
+    }
 
-            print 'been sent:</p>';
-            print '<p>To: ' . $email . '</p>';
+    print 'been sent:</p>';
+    print '<p>To: ' . $email . '</p>';
 
-            print $message;
-        } else {
+    print $message;
+} else {
 
-            print '<h2>Tell us about your hike.</h2>';
+    print '<h2>Tell us about your hike.</h2>';
 
 
-            //####################################
-            //
+    //####################################
+    //
         print PHP_EOL . '<!-- SECTION 3b Error Messages -->' . PHP_EOL;
-            //
-            // display any error messages before we print out the form
+    //
+    // display any error messages before we print out the form
 
-            if ($errorMsg) {
-                print '<div id="errors">' . PHP_EOL;
-                print '<h2>Your form has the following mistakes that need to be fixed.</h2>' . PHP_EOL;
-                print '<ol>' . PHP_EOL;
+    if ($errorMsg) {
+        print '<div id="errors">' . PHP_EOL;
+        print '<h2>Your form has the following mistakes that need to be fixed.</h2>' . PHP_EOL;
+        print '<ol>' . PHP_EOL;
 
-                foreach ($errorMsg as $err) {
-                    print '<li>' . $err . '</li>' . PHP_EOL;
-                }
+        foreach ($errorMsg as $err) {
+            print '<li>' . $err . '</li>' . PHP_EOL;
+        }
 
-                print '</ol>' . PHP_EOL;
-                print '</div>' . PHP_EOL;
-            }
+        print '</ol>' . PHP_EOL;
+        print '</div>' . PHP_EOL;
+    }
 
-            //####################################
-            //
+    //####################################
+    //
         print PHP_EOL . '<!-- SECTION 3c html Form -->' . PHP_EOL;
-            //
-            /* Display the HTML form. note that the action is to this same page. $phpSelf
-              is defined in top.php
-              NOTE the line:
-              value="<?php print $email; ?>
-              this makes the form sticky by displaying either the initial default value (line ??)
-              or the value they typed in (line ??)
-              NOTE this line:
-              <?php if($emailERROR) print 'class="mistake"'; ?>
-              this prints out a css class so that we can highlight the background etc. to
-              make it stand out that a mistake happened here.
-             */
+    //
+    /* Display the HTML form. note that the action is to this same page. $phpSelf
+      is defined in top.php
+      NOTE the line:
+      value="<?php print $email; ?>
+      this makes the form sticky by displaying either the initial default value (line ??)
+      or the value they typed in (line ??)
+      NOTE this line:
+      <?php if($emailERROR) print 'class="mistake"'; ?>
+      this prints out a css class so that we can highlight the background etc. to
+      make it stand out that a mistake happened here.
+     */
 
-            $query = "SELECT DISTINCT pmkHikersId, fldFirstName, fldLastName";
-            $query .= "FROM tblHikersTrails";
-            $query .= "ORDER BY  pmkHikersId";
+    $query = "SELECT pmkHikersId, fldFirstName, fldLastName ";
+    $query .= "FROM tblHikers ";
+    $query .= "ORDER BY  pmkHikersId";
 
 
-            // Step Three: run your query being sure to implement security
-            if ($thisDatabaseReader->querySecurityOk($query, 0, 1)) {
-                $query = $thisDatabaseReader->sanitizeQuery($query);
-                $hikers = $thisDatabaseReader->select($query, '');
-            }
-            ?>    
+    // Step Three: run your query being sure to implement security
+    if ($thisDatabaseReader->querySecurityOk($query, 0, 1)) {
+        $query = $thisDatabaseReader->sanitizeQuery($query);
+        $hikers = $thisDatabaseReader->select($query);
+    }
+
+    ?>    
 
 
 
             <form action = "<?php print $phpSelf; ?>"
                   id = "frmRegister"
                   method = "post">
-                <fieldset class="listbox" <?php if ($placeERROR) print ' mistake'; ?>">
-                    
-                    
-                    <?php
-//                    print "<h2>Name:</h2>";
-//
-//                    print '<label for="lstHikers"';
-//                    if ($buildingERROR) {
-//                        print ' class = "mistake"';
-//                    }
-//                    print '>Hiker ';
-//                    print '<select id="lstHikers" ';
-//                    print '        name="lstHikers"';
-//                    print '        tabindex="300" >';
-//
-//
-//                    foreach ($hikers as $hiker) {
-//
-//                        print '<option ';
-//                        if ($pmkHikersId == $hiker["pmkHikersId"])
-//                            print " selected='selected' ";
-//
-//                        print 'value="' . $hiker["pmkHikersId"] . '">' . $hiker["fldFirstName"] . $hiker["fldLastName"];
-//
-//                        print '</option>';
-//                    }
-//
-//                    print '</select></label>';
-//
-//                    print '</form>';
-//                    ?>          
-                                        <legend>Name:</legend>
-                                        <select id="lstHikers"
-                                                name="lstHikers"
-                                                tabindex="520">
-                                            <option <?php if ($pmkHikersId == "1") print " selected "; ?>
-                                                value="1">Spongebob Squarepants</option>
-                    
-                                            <option <?php if ($pmkHikersId == "2") print " selected "; ?>
-                                                value="2">Patrick Star</option>
-                    
-                                            <option <?php if ($pmkHikersId == "3") print " selected "; ?>
-                                                value="3">Squidward Tentacles</option>
-                    
-                                            <option <?php if ($pmkHikersId == "4") print " selected "; ?>
-                                                value="4">Eugene Krabs</option>
-                    
-                                            <option <?php if ($pmkHikersId == "5") print " selected "; ?>
-                                                value="5">Sandy Cheeks</option>
-                    
-                                        </select>
+                <fieldset class="listbox" <?php if ($hikerERROR) print ' mistake'; ?>">
+
+    <?php
+                    print "<h2>Name:</h2>";
+
+                    print '<label for="lstHikers"';
+                    if ($hikerERROR) {
+                        print ' class = "mistake"';
+                    }
+                    print '>Hiker ';
+                    print '<select id="lstHikers" ';
+                    print '        name="lstHikers"';
+                    print '        tabindex="300" >';
 
 
+                    foreach ($hikers as $hiker) {
+
+                        print '<option ';
+                        if ($pmkHikersId == $hiker["pmkHikersId"])
+                            print " selected='selected' ";
+
+                        print 'value="' . $hiker["pmkHikersId"] . '">' . $hiker["fldFirstName"] . " " . $hiker["fldLastName"];
+
+                        print '</option>';
+                    }
+
+                    print '</select></label>';
+
+                    print '</form>';
+                    
+    ?>    
+                    <!--
+                    <legend>Name:</legend>
+                    <select id="lstHikers"
+                            name="lstHikers"
+                            tabindex="520">
+                        <option <?php //if ($pmkHikersId == "1") print " selected "; ?>
+                            value="1">Spongebob Squarepants</option>
+
+                        <option <?php //if ($pmkHikersId == "2") print " selected "; ?>
+                            value="2">Patrick Star</option>
+
+                        <option <?php //if ($pmkHikersId == "3") print " selected "; ?>
+                            value="3">Squidward Tentacles</option>
+
+                        <option <?php //if ($pmkHikersId == "4") print " selected "; ?>
+                            value="4">Eugene Krabs</option>
+
+                        <option <?php //if ($pmkHikersId == "5") print " selected "; ?>
+                            value="5">Sandy Cheeks</option>
+
+                    </select>
+
+-->
                 </fieldset>
                 <fieldset class = "date">
 
@@ -388,7 +387,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                         <label class = "required" for = "txtDate">Date:</label>
 
                         <input 
-                        <?php if ($dateERROR) print 'class="mistake"'; ?>
+    <?php if ($dateERROR) print 'class="mistake"'; ?>
                             id = "txtDate"     
                             maxlength = "45"
                             name = "txtDate"
@@ -410,7 +409,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                                    name="radTrail"
                                    value="1"
                                    tabindex="572"
-                                   <?php if ($gender == "Camel's Hump") echo ' checked="checked" '; ?>>
+    <?php if ($gender == "Camel's Hump") echo ' checked="checked" '; ?>>
                             Camel's Hump
                         </label>
                     </p>
@@ -421,7 +420,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                                    name="radTrail"
                                    value="2"
                                    tabindex="582"
-                                   <?php if ($gender == "Snake Mountain") echo ' checked="checked" '; ?>>
+    <?php if ($gender == "Snake Mountain") echo ' checked="checked" '; ?>>
                             Snake Mountain
                         </label>
                     </p>
@@ -432,7 +431,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                                    name="radTrail"
                                    value="3"
                                    tabindex="582"
-                                   <?php if ($gender == "Prospect Rock") echo ' checked="checked" '; ?>>
+    <?php if ($gender == "Prospect Rock") echo ' checked="checked" '; ?>>
                             Prospect Rock
                         </label>
                     </p>
@@ -443,7 +442,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                                    name="radTrail"
                                    value="4"
                                    tabindex="582"
-                                   <?php if ($gender == "Skylight Pond") echo ' checked="checked" '; ?>>
+    <?php if ($gender == "Skylight Pond") echo ' checked="checked" '; ?>>
                             Skylight Pond
                         </label>
                     </p>
@@ -454,7 +453,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                                    name="radTrail"
                                    value="5"
                                    tabindex="582"
-                                   <?php if ($gender == "Mount Pisgah") echo ' checked="checked" '; ?>>
+    <?php if ($gender == "Mount Pisgah") echo ' checked="checked" '; ?>>
                             Mount Pisgah
                         </label>
                     </p>
@@ -464,9 +463,9 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                     <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Register" >
                 </fieldset> <!-- ends buttons -->
             </form>     
-            <?php
-        } // ends body submit
-        ?>
+    <?php
+} // ends body submit
+?>
     </article>     
 </main>     
 
