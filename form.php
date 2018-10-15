@@ -393,7 +393,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                             maxlength = "45"
                             name = "txtDate"
                             onfocus = "this.select()"
-                            placeholder = "YYYY"
+                            placeholder = "YYYY-MM-DD"
                             tabindex = "120"
                             type = "text"
                             value = "<?php print $date; ?>"
