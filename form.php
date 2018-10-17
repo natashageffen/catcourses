@@ -243,12 +243,15 @@ if (isset($_POST["btnSubmit"])) {
     } // end form is valid     
 }   // ends if form was submitted.
 //#############################################################################
-//
+//?>
+<fieldset class ="formbox">
+<?php
+
 print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
 //
 ?>       
     
-    <article>
+    
         <?php
 //####################################
 //
@@ -321,7 +324,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
             }
             ?>    
 
-
+        
 
             <form action = "<?php print PHP_SELF; ?>"
                   id = "frmRegister"
@@ -502,10 +505,11 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                     <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Register" >
                 </fieldset> <!-- ends buttons -->
             </form>     
+       
     <?php
 } // ends body submit
 ?>
-    </article>     
+     </fieldset>     
     
 
 <?php include 'footer.php'; ?>

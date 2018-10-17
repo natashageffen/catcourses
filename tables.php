@@ -18,10 +18,10 @@ if (isset($_GET['getRecordsFor'])) {
 
 ?>
 
-
+<fieldset class ="tablesbox">
 <?php
 // Begin output
-print '<article>';
+
 print '<h2>Database: ' . DATABASE_NAME . '</h2>';
 
 // print out a list of all the tables and their description
@@ -149,7 +149,11 @@ if ($tableName != "") {
     print '</table>';
     print '</aside>';
 }
-print '</article>';
+?>
+    </fieldset>
+<?php
+
 include "footer.php";
 ?>
+
 

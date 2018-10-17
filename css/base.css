@@ -6,14 +6,7 @@
 /*------------------------   standard elements  ----------------------------- */
 body{
     margin: 0 5% 0 5%;
-    background-image: url("images/camelshump.jpg");
-    background-size: 100%;
     background-color: #cccccc; /* Used if the image is unavailable */
-  height: 500px; /* You must set a specified height */
-  background-position: center; /* Center the image */
-  background-repeat: repeat; /* Do not repeat the image */
-  background-size: cover; /* Resize the background image to cover the entire container */
-  
 }
 article{
     padding: 2em;
@@ -28,7 +21,17 @@ img{
     z-index: -1;
 }
 
-main {
+.indexbox {
+    background: rgba(204, 204, 204, 0.9);
+    padding: 20px;
+}
+
+.formbox {
+    background: rgba(204, 204, 204, 0.9);
+    padding: 20px;
+}
+
+.tablesbox {
     background: rgba(204, 204, 204, 0.9);
     padding: 20px;
 }
