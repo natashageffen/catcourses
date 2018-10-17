@@ -18,7 +18,7 @@ if (isset($_GET['getRecordsFor'])) {
 
 ?>
 
-<main>
+
 <?php
 // Begin output
 print '<article>';
@@ -153,4 +153,3 @@ print '</article>';
 include "footer.php";
 ?>
 
-</main>

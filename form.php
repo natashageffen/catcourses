@@ -1,3 +1,4 @@
+
 <?php
 include 'top.php';
 
@@ -16,13 +17,13 @@ print PHP_EOL . '<!-- SECTION: 1a. debugging setup -->' . PHP_EOL;
 ?>
 
 
-<main>
+
     <?php
     print '<p>Post Array:</p><pre>';
     print_r($_POST);
     print '</pre>';
     ?>
-</main>
+
 
 <?php
 // }
@@ -140,10 +141,11 @@ if (isset($_POST["btnSubmit"])) {
     // Process for when the form passes validation (the errorMsg array is empty)
     //    
     if (!$errorMsg) {
-        if ($debug)
+        if (DEBUG) {
             print '<p>Form is valid</p>';
 
-
+        }
+        
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         //
         print PHP_EOL . '<!-- SECTION: 2e Save Data -->' . PHP_EOL;
@@ -162,7 +164,7 @@ if (isset($_POST["btnSubmit"])) {
 
         $query = "INSERT INTO tblHikersTrails(fnkHikersId, fnkTrailsId, fldDateHiked) ";
         $query .= "VALUES(?, ?, ?)";
-$thisDatabaseWriter->testSecurityQuery($query, 0);
+//thisDatabaseWriter->testSecurityQuery($query, 0);
         // print $query;
         //print_r($dataRecord);
         if ($thisDatabaseWriter->querySecurityOk($query, 0)) {
@@ -170,7 +172,7 @@ $thisDatabaseWriter->testSecurityQuery($query, 0);
             $records = $thisDatabaseWriter->insert($query, $dataRecord);
         }
         ?>
-        <main>
+        
             <?php
             if ($records) {
                 print '<p>Record Saved</p>';
@@ -178,7 +180,7 @@ $thisDatabaseWriter->testSecurityQuery($query, 0);
                 print '<p>Record NOT Saved</p>';
             }
             ?>
-        </main>
+       
         <?php
         /* // setup csv file
           $myFolder = 'data/';
@@ -224,18 +226,18 @@ $thisDatabaseWriter->testSecurityQuery($query, 0);
 
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         //
-        print PHP_EOL . '<!-- SECTION: 2g Mail to user -->' . PHP_EOL;
-        //
-        // Process for mailing a message which contains the forms data
-        // the message was built in section 2f.
-        $to = $email; // the person who filled out the form     
-        $cc = '';
-        $bcc = '';
-
-        $from = 'WRONG site <customer.service@your-site.com>';
-
-        // subject of mail should make sense to your form
-        $subject = 'Groovy: ';
+//        print PHP_EOL . '<!-- SECTION: 2g Mail to user -->' . PHP_EOL;
+//        //
+//        // Process for mailing a message which contains the forms data
+//        // the message was built in section 2f.
+//        $to = $email; // the person who filled out the form     
+//        $cc = '';
+//        $bcc = '';
+//
+//        $from = 'WRONG site <customer.service@your-site.com>';
+//
+//        // subject of mail should make sense to your form
+//        $subject = 'Groovy: ';
 
        // $mailed = sendMail($to, $cc, $bcc, $from, $subject, $message);
     } // end form is valid     
@@ -245,7 +247,7 @@ $thisDatabaseWriter->testSecurityQuery($query, 0);
 print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
 //
 ?>       
-<main>     
+    
     <article>
         <?php
 //####################################
@@ -258,13 +260,13 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
         if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
             print '<h2>Thank you for providing your information.</h2>';
 
-            print '<p>For your records a copy of this data has ';
-            if (!$mailed) {
-                print "not ";
-            }
-
-            print 'been sent:</p>';
-            print '<p>To: ' . $email . '</p>';
+//            print '<p>For your records a copy of this data has ';
+//            if (!$mailed) {
+//                print "not ";
+//            }
+//
+//            print 'been sent:</p>';
+//            print '<p>To: ' . $email . '</p>';
 
             print $message;
         } else {
@@ -504,9 +506,8 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
 } // ends body submit
 ?>
     </article>     
-</main>     
+    
 
 <?php include 'footer.php'; ?>
 
-</body>     
-</html>
+    

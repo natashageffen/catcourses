@@ -17,7 +17,7 @@ if ($thisDatabaseReader->querySecurityOk($query, 0)) {
     
 }
 ?>
-<main>
+
 <?php
 if (DEBUG) {
     print '<p>Contents of the array<pre>';
@@ -33,4 +33,3 @@ if (is_array($records)) {
 }
 include 'footer.php';
 ?>
-</main>
