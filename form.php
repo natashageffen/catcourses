@@ -135,7 +135,7 @@ if (isset($_POST["btnSubmit"])) {
         $trailERROR = true;
     }
 
-
+    
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
     print PHP_EOL . '<!-- SECTION: 2d Process Form - Passed Validation -->' . PHP_EOL;
@@ -354,6 +354,7 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
             print 'value="' . $i++ . '">' . $trail["fldTrailName"];
             print '</label>' . PHP_EOL;
             
+       
         }
     }
     print '</fieldset>' . PHP_EOL;
