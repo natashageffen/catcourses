@@ -20,6 +20,9 @@
         // inlcude all libraries. 
         // 
         // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
+        
+        $isAdmin = true;
+        
         print '<!-- begin including libraries -->';
         
         include 'lib/security.php';
