@@ -34,12 +34,12 @@ print PHP_EOL . '<!-- SECTION: 1b form variables -->' . PHP_EOL;
 // Initialize variables one for each form element
 // in the order they appear on the form
 
-
-$pmkHikersId = 0;
-$date = "YYYY-MM-DD";
 $pmkTrailsId = 0;
-
-
+$fldTotalDistance = "";
+$fldHikingTime = "HH:MM:SS";
+$fldVerticalRise = "";
+$fldRating = 0;
+        
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^% 
 //
 print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
@@ -47,10 +47,11 @@ print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
 // Initialize Error Flags one for each form element we validate
 // in the order they appear on the form
 
-$hikerERROR = false;
-$dateERROR = false;
 $trailERROR = false;
-
+$distanceERROR = false;
+$timeERROR = false;
+$verticalRiseERROR = false;
+$ratingERROR = false;
 
 ////%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -86,15 +87,19 @@ if (isset($_POST["btnSubmit"])) {
     // remove any potential JavaScript or html code from users input on the
     // form. Note it is best to follow the same order as declared in section 1c.
 
-
-    $pmkHikersId = (int) htmlentities($_POST["lstHikers"], ENT_QUOTES, "UTF-8");
-     
-    $date = htmlentities($_POST["txtDate"], ENT_QUOTES, "UTF-8");
-
-    $pmkTrailsId = (int) htmlentities($_POST["radTrails"], ENT_QUOTES, "UTF-8");
+//
+//    $pmkHikersId = (int) htmlentities($_POST["lstHikers"], ENT_QUOTES, "UTF-8");
+//     
+//    $date = htmlentities($_POST["txtDate"], ENT_QUOTES, "UTF-8");
+//
+//    $pmkTrailsId = (int) htmlentities($_POST["radTrails"], ENT_QUOTES, "UTF-8");
 
    
-
+        $pmkTrailsId = (int) htmlentities($_POST["lstHikers"], ENT_QUOTES, "UTF-8");
+        $fldTotalDistance = htmlentities($_POST["txtDistance"], ENT_QUOTES, "UTF-8");
+        $fldHikingTime = htmlentities($_POST["txtTime"], ENT_QUOTES, "UTF-8");
+        $fldVerticalRise = htmlentities($_POST["txtVerticalRise"], ENT_QUOTES, "UTF-8");
+        $fldRating = (int) htmlentities($_POST["radRating"], ENT_QUOTES, "UTF-8");
 
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
