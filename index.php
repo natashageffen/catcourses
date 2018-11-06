@@ -29,11 +29,20 @@ if (DEBUG) {
 <fieldset class = "indexbox">
     <?php
 print '<h2 class="alternateRows">Hiking Trails</h2>';
+
 if (is_array($records)) {
     foreach ($records as $record) {
         print '<p>' . $record['pmkTrailsId'] . ' ' . $record['fldTrailName'] . ' ' . $record['fldTotalDistance'] . ' ' . $record['fldHikingTime'] . ' ' . $record['fldVerticalRise'] . ' ' . $record['fldRating'] . '</p>';
-    }
+   
+      
 }
+
+}
+
+if ($isAdmin == true){
+    echo "<a href='form-trails.php'>EDIT TABLE</a>";
+}
+        
 ?>
 
 </fieldset>
