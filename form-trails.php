@@ -8,6 +8,8 @@ print PHP_EOL . '<!-- SECTION: 1 Initialize variables -->' . PHP_EOL;
 // These variables are used in both sections 2 and 3, otherwise we would
 // declare them in the section we needed them
 
+$update = false;
+
 print PHP_EOL . '<!-- SECTION: 1a. debugging setup -->' . PHP_EOL;
 // We print out the post array so that we can see our form is working.
 // Normally i wrap this in a debug statement but for now i want to always
@@ -34,12 +36,32 @@ print PHP_EOL . '<!-- SECTION: 1b form variables -->' . PHP_EOL;
 // Initialize variables one for each form element
 // in the order they appear on the form
 
-$pmkTrailsId = 0;
+$pmkTrailsId = -1;
+$fldTrailName = 0;
 $fldTotalDistance = "";
 $fldHikingTime = "HH:MM:SS";
 $fldVerticalRise = "";
 $fldRating = 0;
-        
+ 
+if (isset($_GET["id"])) {
+    $pmkTrailsId = (int) htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
+
+    $query = 'SELECT fldTrailName, fldTotalDistance, fldHikingTime, fldVerticalRise, fldRating ';
+    $query .= 'FROM tblTrails WHERE pmkTrailsId = ?';
+
+    $data = array($pmkTrailsId);
+
+    if ($thisDatabaseReader->querySecurityOk($query, 0)) {
+        $query = $thisDatabaseReader->sanitizeQuery($query);
+        $records = $thisDatabaseReader->select($query, '');
+    }
+    
+    $trailName = $record[0]["fldTrailName"];
+    $distance = $record[0]["pmkTrailsId"];
+    $time = $record[0]["fldTotalDistance"];
+    $verticalRise = $record[0]["fldVerticalRise"];
+    $rating = $record[0]["fldRating"];
+}
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^% 
 //
 print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
@@ -59,11 +81,14 @@ print PHP_EOL . '<!-- SECTION: 1d misc variables -->' . PHP_EOL;
 //
 // create array to hold error messages filled (if any) in 2d displayed in 3c.
 $errorMsg = array();
-
+        
 // have we mailed the information to the user, flag variable?
 //$mailed = false;       
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
+
+
+
 print PHP_EOL . '<!-- SECTION: 2 Process for when the form is submitted -->' . PHP_EOL;
 //
 if (isset($_POST["btnSubmit"])) {
@@ -93,9 +118,13 @@ if (isset($_POST["btnSubmit"])) {
 //    $date = htmlentities($_POST["txtDate"], ENT_QUOTES, "UTF-8");
 //
 //    $pmkTrailsId = (int) htmlentities($_POST["radTrails"], ENT_QUOTES, "UTF-8");
-
+        
    
-        $pmkTrailsId = (int) htmlentities($_POST["lstHikers"], ENT_QUOTES, "UTF-8");
+        $pmkTrailsId = (int) htmlentities($_POST["hidTrailsId"], ENT_QUOTES, "UTF-8");
+        if ($pmkTrailsId > 0) {
+            $update = true;
+        }
+        $fldTrailName = htmlentities($_POST["lstTrails"], ENT_QUOTES, "UTF-8");
         $fldTotalDistance = htmlentities($_POST["txtDistance"], ENT_QUOTES, "UTF-8");
         $fldHikingTime = htmlentities($_POST["txtTime"], ENT_QUOTES, "UTF-8");
         $fldVerticalRise = htmlentities($_POST["txtVerticalRise"], ENT_QUOTES, "UTF-8");
@@ -114,30 +143,48 @@ if (isset($_POST["btnSubmit"])) {
 
 
    
-    if ($pmkHikersId == "") {
-        $errorMsg[] = 'Please select a name.';
-        $hikerERROR = true;
-    } elseif (!verifyAlpha($pmkHikersId)) {
-        $errorMsg[] = 'This name appears to be incorrect.';
-        $hikerERROR = true;
-    }
-
-
-     if ($date == "") {
-        $errorMsg[] = 'Please enter a date';
-        $dateERROR = true;
-    } elseif (!verifyDate($date)) {
-        $errorMsg[] = 'This date appears to be incorrect.';
-        $dateERROR = true;
-    }
-    
-    
-    if ($pmkTrailsId == "") {
+    if ($fldTrailName == "") {
         $errorMsg[] = 'Please select a trail.';
         $trailERROR = true;
-    } elseif (!verifyAlpha($pmkTrailsId)) {
+    } elseif (!verifyAlpha($fldTrailName)) {
         $errorMsg[] = 'This trail appears to be incorrect.';
         $trailERROR = true;
+    }
+
+
+    if ($fldTotalDistance == "") {
+        $errorMsg[] = 'Please enter a distance';
+        $distanceERROR = true;
+    } elseif (!verifyNum($fldTotalDistance)) {
+        $errorMsg[] = 'This distance appears to be incorrect.';
+        $distanceERROR = true;
+    }
+    
+    
+     if ($fldHikingTime == "") {
+        $errorMsg[] = 'Please enter a time';
+        $timeERROR = true;
+    } elseif (!verifyTime($fldHikingTime)) {
+        $errorMsg[] = 'This time appears to be incorrect.';
+        $timeERROR = true;
+    }
+    
+    
+     if ($fldVerticalRise == "") {
+        $errorMsg[] = 'Please enter a vertical rise';
+        $verticalRiseERROR = true;
+    } elseif (!verifyNum($fldVerticalRise)) {
+        $errorMsg[] = 'This vertical rise appears to be incorrect.';
+        $verticalRiseERROR = true;
+    }
+    
+    
+    if ($fldRating == "") {
+        $errorMsg[] = 'Please select a rating.';
+        $ratingERROR = true;
+    } elseif (!verifyAlpha($fldRating)) {
+        $errorMsg[] = 'This rating appears to be incorrect.';
+        $ratingERROR = true;
     }
 
     
@@ -162,21 +209,39 @@ if (isset($_POST["btnSubmit"])) {
         $dataRecord = array();
 
         // assign values to the dataRecord array
-        $dataRecord[] = $pmkHikersId;
-        $dataRecord[] = $date;
-        $dataRecord[] = $pmkTrailsId;
+        $dataRecord[] = $fldTrailName;
+        $dataRecord[] = $fldTotalDistance;
+        $dataRecord[] = $fldHikingTime;
+        $dataRecord[] = $fldVerticalRise;
+        $dataRecord[] = $fldRating;
 
         
+        if ($update){
+            $query = 'UPDATE tblTrails SET ';
+        } else {
+            $query = 'INSERT INTO tblTrails SET ';
+        }
 
-
-        $query = "INSERT INTO tblHikersTrails(fnkHikersId, fldDateHiked, fnkTrailsId) ";
-        $query .= "VALUES(?, ?, ?)";
+        $query = "INSERT INTO tblTrails(fldTrailName, fldTotalDistance, fldHikingTime, fldVerticalRise, fldRating) ";
+        $query .= "VALUES(?, ?, ?, ?, ?)";
 //thisDatabaseWriter->testSecurityQuery($query, 0);
         // print $query;
         //print_r($dataRecord);
+        
+        if ($update) {
+            $query .= 'WHERE pmkTrailsId = ?';
+            $data[] = $pmkTrailsId;
+        
+        
+            if ($thisDatabaseWriter->querySecurityOk($query, 1)) {
+                $query = $thisDatabaseWriter->sanitizeQuery($query);
+                $records = $thisDatabaseWriter->insert($query, $dataRecord);
+            }
+        }   else{
         if ($thisDatabaseWriter->querySecurityOk($query, 0)) {
-            $query = $thisDatabaseReader->sanitizeQuery($query);
+            $query = $thisDatabaseWriter->sanitizeQuery($query);
             $records = $thisDatabaseWriter->insert($query, $dataRecord);
+            }
         }
    
             if ($records) {
@@ -213,8 +278,7 @@ if (isset($_POST["btnSubmit"])) {
 print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
 //
 ?>       
-    
-    
+
         <?php
 //####################################
 //
@@ -253,132 +317,65 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
             //####################################
             //
         print PHP_EOL . '<!-- SECTION 3c html Form -->' . PHP_EOL;
-       
+       ?>
+    
+      <form action="<?php print PHP_SELF; ?>"
+      method="post"
+      id="frmRegister">
+        <input type="hidden" id="hidTrailsId" name="hidTrailsId"
+               value="<?php print $pmkTrailsId; ?>"
+               >
 
-            $query = "SELECT pmkHikersId, fldFirstName, fldLastName ";
-            $query .= "FROM tblHikers ";
-            $query .= "ORDER BY  pmkHikersId";
-
-
-            // Step Three: run your query being sure to implement security
-            if ($thisDatabaseReader->querySecurityOk($query, 0, 1)) {
-                $query = $thisDatabaseReader->sanitizeQuery($query);
-                $hikers = $thisDatabaseReader->select($query);
-            }
-            ?>    
-
-        
-
-            <form action = "<?php print PHP_SELF; ?>"
-                  id = "frmRegister"
-                  method = "post">
-                <fieldset class="listbox <?php if ($hikerERROR) print ' mistake'; ?>">
-
-                    <?php
-                    print "<h2>Name:</h2>";
-
-                    print '<label for="lstHikers"';
-                    if ($hikerERROR) {
-                        print ' class = "mistake"';
-                    }
-                    print '>Hiker ';
-                    print '<select id="lstHikers" ';
-                    print '        name="lstHikers"';
-                    print '        tabindex="300" >';
-
-
-                    foreach ($hikers as $hiker) {
-
-                        print '<option ';
-                        if ($pmkHikersId == $hiker["pmkHikersId"])
-                            print " selected='selected' ";
-
-                        print 'value="' . $hiker["pmkHikersId"] . '">' . $hiker["fldFirstName"] . " " . $hiker["fldLastName"];
-
-                        print '</option>';
-                    }
-
-                    print '</select></label>';
-
-                    
-                    ?>    
-                    
-                </fieldset>
-                <fieldset class = "date">
+    <fieldset class = "form">
+                    <p>
+                        <label class="required" for="lstTrails">Trail Name:</label>  
+                        <input autofocus
+                        <?php if ($firstNameERROR) {
+                                print 'class="mistake"'; } ?>
+                               <select name ="lstTrails" id="lstTrails" maxlength="45" >
+                               
+                                   <option> value="<?php print $trailName; ?>"Camel's Hump </option>
+                                   <option> value="<?php print $trailName; ?>"Snake Mountain </option>
+                                   <option> value="<?php print $trailName; ?>"Prospect Rock (Manchester) </option>
+                                   <option> value="<?php print $trailName; ?>"Skylight Pond </option>
+                                   <option> value="<?php print $trailName; ?>"Mount Pisgah </option>
+                              
+   
+                    <p>
+                        <label class="required" for="txtDistance">Total distance:</label>  
+                        <input
+                        <?php if ($distanceERROR){ 
+                                print 'class="mistake"'; }?>
+                            id="txtDistance"
+                            maxlength="45"
+                            name="txtDistance"
+                            onfocus="this.select()"
+                            
+                            tabindex="110"
+                            type="text"
+                            value="<?php print $distance; ?>"                    
+                            >                    
+                    </p>
 
 
                     <p>
-                        <label class = "required" for = "txtDate">Date:</label>
-
-                        <input 
-    <?php if ($dateERROR) print 'class="mistake"'; ?>
-                            id = "txtDate"     
-                            maxlength = "45"
-                            name = "txtDate"
-                            onfocus = "this.select()"
-                            placeholder = "YYYY-MM-DD"
-                            tabindex = "120"
-                            type = "text"
-                            value = "<?php print $date; ?>"
-                            >
-
-                    </p>     
-                </fieldset> 
-
-                <fieldset class="radio <?php if ($trailERROR) print ' mistake'; ?>">
-    <?php
-    $query = "SELECT pmkTrailsId, fldTrailName ";
-    $query .= "FROM tblTrails ";
-    $query .= "ORDER BY pmkTrailsId";
-
-    if ($thisDatabaseReader->querySecurityOk($query, 0, 1)) {
-        $query = $thisDatabaseReader->sanitizeQuery($query);
-        $trails = $thisDatabaseReader->select($query);
-    }
-
-
-    print PHP_EOL . '<!-- SECTION 3c html Form -->' . PHP_EOL;
-    print '<h2>Trails</h2>' . PHP_EOL;
-   
-    print '<fieldset class="radiobutton ';
-    if ($trailERROR) {
-        print ' mistake';
-    }
-    print '">';
-    $i = 0;
-
-    if (is_array($trails)) {
-        foreach ($trails as $trail) {
-
-            print "\t" . '<label for="rad' . str_replace(" ", "", $trail["fldTrailName"]) . '"><input type="radio" ';
-            print ' id="rad' . str_replace(" ", "", $trail["fldTrailName"]) . '" ';
-            print ' name="radTrails" ' ; 
-
-            
-            
-            print 'value="' . $i++ . '">' . $trail["fldTrailName"];
-            print '</label>' . PHP_EOL;
-            
-       
-        }
-    }
-    print '</fieldset>' . PHP_EOL;
-    
-    ?>
-                  
+                        <label class="required" for="txtTime">Hiking time:</label>  
+                        <input
+                        <?php if ($timeERROR){
+                            print 'class="mistake"'; }?>
+                            id="txtTime"
+                            name="txtTime"
+                            onfocus="this.select()"
+                            placeholder="HH:MM:SS"
+                            tabindex="120"
+                            type="text"
+                            value="<?php print $time; ?>"                    
+                            >                    
+                    </p>
                 </fieldset>
-                <fieldset class="buttons">
-                    <legend></legend>
-                    <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Register" >
-                </fieldset> <!-- ends buttons -->
-            </form>     
-       
-    <?php
-} // ends body submit
-?>
-     </fieldset>     
-    
+                
+                 </form>
+
+ 
 
 <?php include 'footer.php'; ?>
-
-    
