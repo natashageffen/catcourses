@@ -45,6 +45,30 @@ $fldVerticalRise = "";
 $fldRating = 0;
 $pmkTag = 0;
 
+
+
+if (isset($_GET["id"])) {
+    $pmkTrailsId = (int) htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
+
+    $query = 'SELECT fldTrailName, fldTotalDistance, fldHikingTime, fldVerticalRise, fldRating ';
+    $query .= 'FROM tblTrails WHERE pmkTrailsId = ?';
+
+    $data = array($pmkTrailsId);
+
+    if ($thisDatabaseReader->querySecurityOk($query, 1)) {
+        $query = $thisDatabaseReader->sanitizeQuery($query);
+        $trail = $thisDatabaseReader->select($query, $data);
+    }
+
+    $name = $trail[0]["fldTrailName"];
+    $distance = $trail[0]["fldTotalDistance"];
+    $time = $trail[0]["fldHikingTime"];
+    $verticalRise = $trail[0]["fldVerticalRise"];
+    $rating = $trail[0]["fldRating"];
+    
+    
+}
+    
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^% 
 //
 print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
