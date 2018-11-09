@@ -27,5 +27,13 @@ function verifyDate($date) {
 }
 
 print PHP_EOL . '<!--  END include validation-functions -->' . PHP_EOL;
-?>
 
+
+function verifyTime($time) {
+
+    return (preg_match("/^([0-9]+):([0-5]?[0-9]):([0-5]?[0-9])$/", $time));
+}
+
+
+
+?>

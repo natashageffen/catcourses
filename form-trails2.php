@@ -271,9 +271,7 @@ if (isset($_POST["btnSubmit"])) {
     } // end form is valid     
 }   // ends if form was submitted.
 //#############################################################################
-//?>
-<fieldset class ="formbox">
-<?php
+
 
 print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
 //
@@ -313,7 +311,8 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                 print '</ol>' . PHP_EOL;
                 print '</div>' . PHP_EOL;
             }
-
+        }
+        
             //####################################
             //
         print PHP_EOL . '<!-- SECTION 3c html Form -->' . PHP_EOL;
@@ -329,17 +328,17 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
     <fieldset class = "form">
                     <p>
                         <label class="required" for="lstTrails">Trail Name:</label>  
-                        <input autofocus
-                        <?php if ($firstNameERROR) {
+                        
+                        <?php if ($trailERROR) {
                                 print 'class="mistake"'; } ?>
                                <select name ="lstTrails" id="lstTrails" maxlength="45" >
                                
-                                   <option> value="<?php print $trailName; ?>"Camel's Hump </option>
-                                   <option> value="<?php print $trailName; ?>"Snake Mountain </option>
-                                   <option> value="<?php print $trailName; ?>"Prospect Rock (Manchester) </option>
-                                   <option> value="<?php print $trailName; ?>"Skylight Pond </option>
-                                   <option> value="<?php print $trailName; ?>"Mount Pisgah </option>
-                              
+                                   <option value="<?php print $trailName; ?>" >Camel's Hump </option>
+                                   <option value="<?php print $trailName; ?>" >Snake Mountain </option>
+                                   <option value="<?php print $trailName; ?>" >Prospect Rock (Manchester) </option>
+                                   <option value="<?php print $trailName; ?>" >Skylight Pond </option>
+                                   <option value="<?php print $trailName; ?>" >Mount Pisgah </option>
+                               </p>      
    
                     <p>
                         <label class="required" for="txtDistance">Total distance:</label>  
@@ -372,10 +371,46 @@ print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
                             value="<?php print $time; ?>"                    
                             >                    
                     </p>
-                </fieldset>
-                
-                 </form>
+                    
+                     <p>
+                        <label class="required" for="txtTime">Hiking time:</label>  
+                        <input
+                        <?php if ($timeERROR){
+                            print 'class="mistake"'; }?>
+                            id="txtTime"
+                            name="txtTime"
+                            onfocus="this.select()"
+                            placeholder="HH:MM:SS"
+                            tabindex="120"
+                            type="text"
+                            value="<?php print $time; ?>"                    
+                            >                    
+                    </p>
+                    
+                    <p>
+                        <label class="required" for="txtVerticalRise">Vertical Rise:</label>  
+                        <input
+                        <?php if ($verticalRiseERROR){
+                            print 'class="mistake"'; }?>
+                            id="txtVerticalRise"
+                            name="txtTime"
+                            onfocus="this.select()"
+                            placeholder=""
+                            tabindex="120"
+                            type="text"
+                            value="<?php print $verticalRise; ?>"                    
+                            >                    
+                    </p>
+                    <p>
+                    <input type="radio" name="rating" value="0"> Easy<br>
+                    <input type="radio" name="ratung" value="1"> Moderate<br>
+                    <input type="radio" name="rating" value="2"> Moderately Strenuous<br>
+                    <input type="radio" name="rating" value="3"> Strenuous<br>
+              
+                    </p>
+                 
 
- 
-
+                 </fieldset>
+      </form>
 <?php include 'footer.php'; ?>
+

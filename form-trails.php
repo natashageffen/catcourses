@@ -20,11 +20,11 @@ print PHP_EOL . '<!-- SECTION: 1a. debugging setup -->' . PHP_EOL;
 
 
 
-    <?php
-    print '<p>Post Array:</p><pre>';
-    print_r($_POST);
-    print '</pre>';
-    ?>
+<?php
+print '<p>Post Array:</p><pre>';
+print_r($_POST);
+print '</pre>';
+?>
 
 
 <?php
@@ -36,32 +36,15 @@ print PHP_EOL . '<!-- SECTION: 1b form variables -->' . PHP_EOL;
 // Initialize variables one for each form element
 // in the order they appear on the form
 
+
 $pmkTrailsId = -1;
 $fldTrailName = 0;
 $fldTotalDistance = "";
 $fldHikingTime = "HH:MM:SS";
 $fldVerticalRise = "";
 $fldRating = 0;
- 
-if (isset($_GET["id"])) {
-    $pmkTrailsId = (int) htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
+$pmkTag = 0;
 
-    $query = 'SELECT fldTrailName, fldTotalDistance, fldHikingTime, fldVerticalRise, fldRating ';
-    $query .= 'FROM tblTrails WHERE pmkTrailsId = ?';
-
-    $data = array($pmkTrailsId);
-
-    if ($thisDatabaseReader->querySecurityOk($query, 0)) {
-        $query = $thisDatabaseReader->sanitizeQuery($query);
-        $records = $thisDatabaseReader->select($query, '');
-    }
-    
-    $trailName = $record[0]["fldTrailName"];
-    $distance = $record[0]["pmkTrailsId"];
-    $time = $record[0]["fldTotalDistance"];
-    $verticalRise = $record[0]["fldVerticalRise"];
-    $rating = $record[0]["fldRating"];
-}
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^% 
 //
 print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
@@ -74,6 +57,8 @@ $distanceERROR = false;
 $timeERROR = false;
 $verticalRiseERROR = false;
 $ratingERROR = false;
+$tagERROR = false;
+
 
 ////%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -81,14 +66,11 @@ print PHP_EOL . '<!-- SECTION: 1d misc variables -->' . PHP_EOL;
 //
 // create array to hold error messages filled (if any) in 2d displayed in 3c.
 $errorMsg = array();
-        
+
 // have we mailed the information to the user, flag variable?
 //$mailed = false;       
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
-
-
-
 print PHP_EOL . '<!-- SECTION: 2 Process for when the form is submitted -->' . PHP_EOL;
 //
 if (isset($_POST["btnSubmit"])) {
@@ -112,23 +94,18 @@ if (isset($_POST["btnSubmit"])) {
     // remove any potential JavaScript or html code from users input on the
     // form. Note it is best to follow the same order as declared in section 1c.
 
-//
-//    $pmkHikersId = (int) htmlentities($_POST["lstHikers"], ENT_QUOTES, "UTF-8");
-//     
-//    $date = htmlentities($_POST["txtDate"], ENT_QUOTES, "UTF-8");
-//
-//    $pmkTrailsId = (int) htmlentities($_POST["radTrails"], ENT_QUOTES, "UTF-8");
-        
-   
-        $pmkTrailsId = (int) htmlentities($_POST["hidTrailsId"], ENT_QUOTES, "UTF-8");
-        if ($pmkTrailsId > 0) {
-            $update = true;
-        }
-        $fldTrailName = htmlentities($_POST["lstTrails"], ENT_QUOTES, "UTF-8");
-        $fldTotalDistance = htmlentities($_POST["txtDistance"], ENT_QUOTES, "UTF-8");
-        $fldHikingTime = htmlentities($_POST["txtTime"], ENT_QUOTES, "UTF-8");
-        $fldVerticalRise = htmlentities($_POST["txtVerticalRise"], ENT_QUOTES, "UTF-8");
-        $fldRating = (int) htmlentities($_POST["radRating"], ENT_QUOTES, "UTF-8");
+
+//    $pmkTrailsId = (int) htmlentities($_POST["pmkTrailsId"], ENT_QUOTES, "UTF-8");
+//    if ($pmkTrailsId > 0) {
+//        $update = true;
+//    }
+    $fldTrailName = htmlentities($_POST["lstTrails"], ENT_QUOTES, "UTF-8");
+    $fldTotalDistance = htmlentities($_POST["txtDistance"], ENT_QUOTES, "UTF-8");
+    $fldHikingTime = htmlentities($_POST["txtTime"], ENT_QUOTES, "UTF-8");
+    $fldVerticalRise = htmlentities($_POST["txtVerticalRise"], ENT_QUOTES, "UTF-8");
+    $fldRating = (int) htmlentities($_POST["radRating"], ENT_QUOTES, "UTF-8");
+    $pmkTag = (int) htmlentities($_POST["chkTag"], ENT_QUOTES, "UTF-8");
+
 
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
@@ -142,7 +119,7 @@ if (isset($_POST["btnSubmit"])) {
     // see section 3b. The error flag ($emailERROR) will be used in section 3c.
 
 
-   
+
     if ($fldTrailName == "") {
         $errorMsg[] = 'Please select a trail.';
         $trailERROR = true;
@@ -155,39 +132,46 @@ if (isset($_POST["btnSubmit"])) {
     if ($fldTotalDistance == "") {
         $errorMsg[] = 'Please enter a distance';
         $distanceERROR = true;
-    } elseif (!verifyNum($fldTotalDistance)) {
+    } elseif (!is_numeric($fldTotalDistance)) {
         $errorMsg[] = 'This distance appears to be incorrect.';
         $distanceERROR = true;
     }
-    
-    
-     if ($fldHikingTime == "") {
+
+
+    if ($fldHikingTime == "") {
         $errorMsg[] = 'Please enter a time';
         $timeERROR = true;
     } elseif (!verifyTime($fldHikingTime)) {
         $errorMsg[] = 'This time appears to be incorrect.';
         $timeERROR = true;
     }
-    
-    
-     if ($fldVerticalRise == "") {
+
+
+    if ($fldVerticalRise == "") {
         $errorMsg[] = 'Please enter a vertical rise';
         $verticalRiseERROR = true;
-    } elseif (!verifyNum($fldVerticalRise)) {
+    } elseif (!is_numeric($fldVerticalRise)) {
         $errorMsg[] = 'This vertical rise appears to be incorrect.';
         $verticalRiseERROR = true;
     }
-    
-    
-    if ($fldRating == "") {
-        $errorMsg[] = 'Please select a rating.';
-        $ratingERROR = true;
-    } elseif (!verifyAlpha($fldRating)) {
-        $errorMsg[] = 'This rating appears to be incorrect.';
-        $ratingERROR = true;
-    }
 
+
+
+        if($_POST['radRating'] == -1) {
+            $errorMsg[] = 'Please select a rating.';
+            $ratingERROR = true;
+        }
     
+
+ 
+        if($_POST['chkTag'] == -1) {
+            $errorMsg[] = 'Please select a tag.';
+            $tagERROR = true;
+        } 
+    
+
+
+
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
     print PHP_EOL . '<!-- SECTION: 2d Process Form - Passed Validation -->' . PHP_EOL;
@@ -197,9 +181,8 @@ if (isset($_POST["btnSubmit"])) {
     if (!$errorMsg) {
         if (DEBUG) {
             print '<p>Form is valid</p>';
-
         }
-        
+
         //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         //
         print PHP_EOL . '<!-- SECTION: 2e Save Data -->' . PHP_EOL;
@@ -215,50 +198,34 @@ if (isset($_POST["btnSubmit"])) {
         $dataRecord[] = $fldVerticalRise;
         $dataRecord[] = $fldRating;
 
-        
-        if ($update){
-            $query = 'UPDATE tblTrails SET ';
-        } else {
-            $query = 'INSERT INTO tblTrails SET ';
-        }
+
+
 
         $query = "INSERT INTO tblTrails(fldTrailName, fldTotalDistance, fldHikingTime, fldVerticalRise, fldRating) ";
         $query .= "VALUES(?, ?, ?, ?, ?)";
 //thisDatabaseWriter->testSecurityQuery($query, 0);
         // print $query;
         //print_r($dataRecord);
-        
-        if ($update) {
-            $query .= 'WHERE pmkTrailsId = ?';
-            $data[] = $pmkTrailsId;
-        
-        
-            if ($thisDatabaseWriter->querySecurityOk($query, 1)) {
-                $query = $thisDatabaseWriter->sanitizeQuery($query);
-                $records = $thisDatabaseWriter->insert($query, $dataRecord);
-            }
-        }   else{
         if ($thisDatabaseWriter->querySecurityOk($query, 0)) {
-            $query = $thisDatabaseWriter->sanitizeQuery($query);
+            $query = $thisDatabaseReader->sanitizeQuery($query);
             $records = $thisDatabaseWriter->insert($query, $dataRecord);
-            }
         }
-   
-            if ($records) {
-                print '<p>Record Saved</p>';
-            } else {
-                print '<p>Record NOT Saved</p>';
-            }
-           
+
+        if ($records) {
+            print '<p>Record Saved</p>';
+        } else {
+            print '<p>Record NOT Saved</p>';
+        }
+
         print PHP_EOL . '<!-- SECTION: 2f Create message -->' . PHP_EOL;
-       
+
 
         $message = '<h2>Your  information:</h2>';
 
         foreach ($_POST as $htmlName => $value) {
 
             $message .= '<p>';
-              
+
             $camelCase = preg_split('/(?=[A-Z])/', substr($htmlName, 3));
 
             foreach ($camelCase as $oneWord) {
@@ -267,115 +234,259 @@ if (isset($_POST["btnSubmit"])) {
 
             $message .= ' = ' . htmlentities($value, ENT_QUOTES, "UTF-8") . '</p>';
         }
-
     } // end form is valid     
 }   // ends if form was submitted.
 //#############################################################################
-//?>
-<fieldset class ="formbox">
-<?php
-
-print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
 //
-?>       
+?>
+<fieldset class ="formbox">
+    <?php
+    print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
+//
+    ?>       
 
-        <?php
+
+<?php
 //####################################
 //
-        print PHP_EOL . '<!-- SECTION 3a  -->' . PHP_EOL;
+print PHP_EOL . '<!-- SECTION 3a  -->' . PHP_EOL;
 // 
 // If its the first time coming to the form or there are errors we are going
 // to display the form.
 
-        if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-            print '<h2>Thank you for providing your information.</h2>';
-            print $message;
-        } else {
+if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
+    print '<h2>Thank you for providing your information.</h2>';
+    print $message;
+} else {
 
-            print '<h2>Tell us about your hike.</h2>';
+    print '<h2>Tell us about your hike.</h2>';
 
 
-            //####################################
-            //
+    //####################################
+    //
         print PHP_EOL . '<!-- SECTION 3b Error Messages -->' . PHP_EOL;
-            //
-            // display any error messages before we print out the form
+    //
+    // display any error messages before we print out the form
 
-            if ($errorMsg) {
-                print '<div id="errors">' . PHP_EOL;
-                print '<h2>Your form has the following mistakes that need to be fixed.</h2>' . PHP_EOL;
-                print '<ol>' . PHP_EOL;
+    if ($errorMsg) {
+        print '<div id="errors">' . PHP_EOL;
+        print '<h2>Your form has the following mistakes that need to be fixed.</h2>' . PHP_EOL;
+        print '<ol>' . PHP_EOL;
 
-                foreach ($errorMsg as $err) {
-                    print '<li>' . $err . '</li>' . PHP_EOL;
-                }
+        foreach ($errorMsg as $err) {
+            print '<li>' . $err . '</li>' . PHP_EOL;
+        }
 
-                print '</ol>' . PHP_EOL;
-                print '</div>' . PHP_EOL;
-            }
+        print '</ol>' . PHP_EOL;
+        print '</div>' . PHP_EOL;
+    }
 
-            //####################################
-            //
+    //####################################
+    //
         print PHP_EOL . '<!-- SECTION 3c html Form -->' . PHP_EOL;
-       ?>
-    
-      <form action="<?php print PHP_SELF; ?>"
-      method="post"
-      id="frmRegister">
-        <input type="hidden" id="hidTrailsId" name="hidTrailsId"
-               value="<?php print $pmkTrailsId; ?>"
-               >
 
-    <fieldset class = "form">
+
+//    $query = "SELECT pmkTrailsId, fldTrailName ";
+//    $query .= "FROM tblTrails ";
+//    $query .= "ORDER BY  pmkTrailsId";
+//
+//
+//    // Step Three: run your query being sure to implement security
+//    if ($thisDatabaseReader->querySecurityOk($query, 0, 1)) {
+//        $query = $thisDatabaseReader->sanitizeQuery($query);
+//        $hikers = $thisDatabaseReader->select($query);
+//    }
+    ?>    
+
+
+
+        <form action = "<?php print PHP_SELF; ?>"
+              id = "frmRegister"
+              method = "post">
+
+            <fieldset  class="listbox <?php if ($trailERROR) print ' mistake'; ?>">
+                <p>
+                <legend>Trail Name</legend>
+                <select id="lstTrails" 
+                        name="lstTrails" 
+                        tabindex="520" >
+                    <option <?php if ($fldHikingTime == "Camel's Hump") print " selected "; ?>
+                        value="1">Camel's Hump</option>
+
+                    <option <?php if ($fldHikingTime == "Snake Mountain") print " selected "; ?>
+                        value="2">Snake Mountain</option>
+
+                    <option <?php if ($fldHikingTime == "Prospect Rock (Manchester)") print " selected "; ?>
+                        value="3">Prospect Rock (Manchester)</option>
+                    
+                    <option <?php if ($fldHikingTime == "Skylight Pond") print " selected "; ?>
+                        value="4">Skylight Pond</option>
+                    
+                    <option <?php if ($fldHikingTime == "Mount Pisgah") print " selected "; ?>
+                        value="5">Mount Pisgah</option>
+                    
+                </select>
+                </p>
+            </fieldset>
+
+            <fieldset class = "distance">
+
+
+                <p>
+                    <label class = "required" for = "txtDistance">Total Distance:</label>
+
+                    <input 
+    <?php if ($distanceERROR) print 'class="mistake"'; ?>
+                        id = "txtDistance"     
+                        maxlength = "45"
+                        name = "txtDistance"
+                        onfocus = "this.select()"
+                        placeholder = ""
+                        tabindex = "120"
+                        type = "text"
+                        value = "<?php $distance; ?>"
+                        >
+
+                </p>     
+            </fieldset> 
+
+            <fieldset class = "time">
+
+
+                <p>
+                    <label class = "required" for = "txtTime">Hiking Time:</label>
+
+                    <input 
+    <?php if ($timeERROR) print 'class="mistake"'; ?>
+                        id = "txtTime"     
+                        maxlength = "45"
+                        name = "txtTime"
+                        onfocus = "this.select()"
+                        placeholder = "HH:MM:SS"
+                        tabindex = "120"
+                        type = "text"
+                        value = "<?php $time; ?>"
+                        >
+
+                </p>     
+            </fieldset> 
+
+            <fieldset class = "distance">
+
+
+                <p>
+                    <label class = "required" for = "txtVerticalRise">Vertical Rise:</label>
+
+                    <input 
+    <?php if ($verticalRiseERROR) print 'class="mistake"'; ?>
+                        id = "txtVerticalRise"     
+                        maxlength = "45"
+                        name = "txtVerticalRise"
+                        onfocus = "this.select()"
+                        placeholder = ""
+                        tabindex = "120"
+                        type = "text"
+                        value = "<?php $verticalRise; ?>"
+                        >
+
+                </p>     
+            </fieldset> 
+            
+                <fieldset class="radio <?php if ($ratingERROR) print ' mistake'; ?>">
+                    <legend>Trail Rating:</legend>
+                    <p>    
+                        <label class="radio-field"><input type="radio" id="radRatingEasy" name="radRating" value="Easy" tabindex="572" 
+    <?php if ($fldRating == "Easy") echo ' checked="checked" '; ?>>
+                            Easy</label>
+                    </p>
                     <p>
-                        <label class="required" for="lstTrails">Trail Name:</label>  
-                        <input autofocus
-                        <?php if ($firstNameERROR) {
-                                print 'class="mistake"'; } ?>
-                               <select name ="lstTrails" id="lstTrails" maxlength="45" >
-                               
-                                   <option> value="<?php print $trailName; ?>"Camel's Hump </option>
-                                   <option> value="<?php print $trailName; ?>"Snake Mountain </option>
-                                   <option> value="<?php print $trailName; ?>"Prospect Rock (Manchester) </option>
-                                   <option> value="<?php print $trailName; ?>"Skylight Pond </option>
-                                   <option> value="<?php print $trailName; ?>"Mount Pisgah </option>
-                              
-   
-                    <p>
-                        <label class="required" for="txtDistance">Total distance:</label>  
-                        <input
-                        <?php if ($distanceERROR){ 
-                                print 'class="mistake"'; }?>
-                            id="txtDistance"
-                            maxlength="45"
-                            name="txtDistance"
-                            onfocus="this.select()"
-                            
-                            tabindex="110"
-                            type="text"
-                            value="<?php print $distance; ?>"                    
-                            >                    
+                        <label class="radio-field"><input type="radio" id="radRatingModerate" name="radRating" value="Moderate" tabindex="574" 
+    <?php if ($fldRating == "Moderate") echo ' checked="checked" '; ?>>
+                            Moderate</label>
                     </p>
 
-
                     <p>
-                        <label class="required" for="txtTime">Hiking time:</label>  
-                        <input
-                        <?php if ($timeERROR){
-                            print 'class="mistake"'; }?>
-                            id="txtTime"
-                            name="txtTime"
-                            onfocus="this.select()"
-                            placeholder="HH:MM:SS"
-                            tabindex="120"
-                            type="text"
-                            value="<?php print $time; ?>"                    
-                            >                    
+                        <label class="radio-field"><input type="radio" id="radRatingModeratelyStrenuous" name="radRating" value="Moderately Strenuous" tabindex="574" 
+    <?php if ($fldRating == "Moderately Strenuous") echo ' checked="checked" '; ?>>
+                            Moderately Strenuous </label>
+                    </p>
+                    
+                    <p>
+                        <label class="radio-field"><input type="radio" id="radRatingStrenuous" name="radRating" value="Strenuous" tabindex="574" 
+    <?php if ($fldRating == "Strenuous") echo ' checked="checked" '; ?>>
+                            Strenuous </label>
                     </p>
                 </fieldset>
-                
-                 </form>
+            
+            <fieldset class="checkbox <?php if ($activityERROR) print ' mistake'; ?>">
+    <legend>Check the boxes that apply to this hike:</legend>
 
- 
+    <p>
+        <label class="check-field">
+            <input <?php if ($pmkTag == "Dogs Allowed") print " checked "; ?>
+                id="chkTagDogsAllowed"
+                name="chkTag"
+                tabindex="420"
+                type="checkbox"
+                value="Dogs Allowed"> Dogs Allowed</label>
+    </p>
+
+    <p>
+        <label class="check-field">
+            <input <?php if ($pmkTag == "Easy") print " unchecked "; ?>
+                id="chkTagEasy"
+                name="chkTag"
+                tabindex="420"
+                type="checkbox"
+                value="Easy"> Easy</label>
+        
+        <label class="check-field">
+            <input <?php if ($pmkTag == "Hard") print " unchecked "; ?>
+                id="chkTagHard"
+                name="chkTag"
+                tabindex="420"
+                type="checkbox"
+                value="Hard"> Hard</label>
+    </p>
+    
+    
+    <label class="check-field">
+            <input <?php if ($pmkTag == "Hiking") print " unchecked "; ?>
+                id="chkTagHiking"
+                name="chkTag"
+                tabindex="420"
+                type="checkbox"
+                value="Hiking"> Hiking</label>
+    
+    <label class="check-field">
+            <input <?php if ($pmkTag == "Skiing") print " unchecked "; ?>
+                id="chkTagSkiing"
+                name="chkTag"
+                tabindex="420"
+                type="checkbox"
+                value="Skiing"> Skiing</label>
+    
+    <label class="check-field">
+            <input <?php if ($pmkTag == "Views") print " unchecked "; ?>
+                id="chkTagViews"
+                name="chkTag"
+                tabindex="420"
+                type="checkbox"
+                value="Views"> Views</label>
+</fieldset>
+            
+            <fieldset class="buttons">
+                <legend></legend>
+                <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Register" >
+            </fieldset> <!-- ends buttons -->
+        </form>     
+
+    <?php
+} // ends body submit
+?>
+</fieldset>     
+
 
 <?php include 'footer.php'; ?>
+
+
