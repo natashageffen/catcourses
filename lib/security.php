@@ -5,7 +5,7 @@ print PHP_EOL . '<!--  BEGIN include security -->' . PHP_EOL;
 function securityCheck($myFormURL = "") {
     $debugThis = false;  // you have to specifically want to test this
     $token = 'a53e9e4d8af0e4e6e1c862c675ce0a3f06be1a9c';
-    if($token != 'a53e9e4d8af0e4e6e1c862c675ce0a3f06be1a9c'){
+    if($token == 'something'){
         print "<p>Invalid token. Please get token from Instructor.";
         die();
     }
@@ -28,5 +28,5 @@ function securityCheck($myFormURL = "") {
     
     return $status;
 }
-print PHP_EOL . '<!--  END include security  -->' . PHP_EOL;
+print PHP_EOL . '<!--  END include security  a53e9e4d8af0e4e6e1c862c675ce0a3f06be1a9c -->' . PHP_EOL;
 ?>
