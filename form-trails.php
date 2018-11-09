@@ -336,10 +336,10 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 //        $query = $thisDatabaseReader->sanitizeQuery($query);
 //        $hikers = $thisDatabaseReader->select($query);
 //    }
-    ?>    
+       
 
-
-
+    if ($isAdmin == true) {
+    ?> 
         <form action = "<?php print PHP_SELF; ?>"
               id = "frmRegister"
               method = "post"
@@ -526,7 +526,13 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
         </form>     
 
     <?php
-} // ends body submit
+} 
+else{
+    print '<p>You are not authorized to see this page.</p>';
+    
+}
+}
+
 ?>
 </fieldset>     
 
