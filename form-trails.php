@@ -60,11 +60,13 @@ if (isset($_GET["id"])) {
         $trail = $thisDatabaseReader->select($query, $data);
     }
 
-    $name = $trail[0]["fldTrailName"];
-    $distance = $trail[0]["fldTotalDistance"];
-    $time = $trail[0]["fldHikingTime"];
-    $verticalRise = $trail[0]["fldVerticalRise"];
-    $rating = $trail[0]["fldRating"];
+    print "<p>trail array:<pre>"; print_r($trail); print "</pre>";
+    
+    $fldTrailName = $trail[0]["fldTrailName"];
+    $fldTotalDistance = $trail[0]["fldTotalDistance"];
+    $fldHikingTime = $trail[0]["fldHikingTime"];
+    $fldVerticalRise = $trail[0]["fldVerticalRise"];
+    $fldRating = $trail[0]["fldRating"];
     
     
 }
@@ -119,10 +121,10 @@ if (isset($_POST["btnSubmit"])) {
     // form. Note it is best to follow the same order as declared in section 1c.
 
 
-//    $pmkTrailsId = (int) htmlentities($_POST["pmkTrailsId"], ENT_QUOTES, "UTF-8");
-//    if ($pmkTrailsId > 0) {
-//        $update = true;
-//    }
+    $pmkTrailsId = (int) htmlentities($_POST["hidTrailsId"], ENT_QUOTES, "UTF-8");
+    if ($pmkTrailsId > 0) {
+        $update = true;
+    }
     $fldTrailName = htmlentities($_POST["lstTrails"], ENT_QUOTES, "UTF-8");
     $fldTotalDistance = htmlentities($_POST["txtDistance"], ENT_QUOTES, "UTF-8");
     $fldHikingTime = htmlentities($_POST["txtTime"], ENT_QUOTES, "UTF-8");
@@ -222,6 +224,11 @@ if (isset($_POST["btnSubmit"])) {
         $dataRecord[] = $fldVerticalRise;
         $dataRecord[] = $fldRating;
 
+        if ($update) {
+                $query = 'UPDATE tblTrails SET ';
+            } else {
+                $query = 'INSERT INTO tblTrails SET ';
+            }
 
 
 
@@ -230,11 +237,20 @@ if (isset($_POST["btnSubmit"])) {
 //thisDatabaseWriter->testSecurityQuery($query, 0);
         // print $query;
         //print_r($dataRecord);
-        if ($thisDatabaseWriter->querySecurityOk($query, 0)) {
-            $query = $thisDatabaseReader->sanitizeQuery($query);
-            $records = $thisDatabaseWriter->insert($query, $dataRecord);
-        }
+        if ($update) {
+                $query .= 'WHERE pmkTrailsId = ?';
+                $data[] = $pmkTrailsId;
 
+                if ($thisDatabaseReader->querySecurityOk($query, 1)) {
+                    $query = $thisDatabaseWriter->sanitizeQuery($query);
+                    $results = $thisDatabaseWriter->update($query, $data);
+                }
+            } else {
+                    if ($thisDatabaseWriter->querySecurityOk($query, 0)) {
+                        $query = $thisDatabaseReader->sanitizeQuery($query);
+                        $records = $thisDatabaseWriter->insert($query, $dataRecord);
+                    }
+            }
         if ($records) {
             print '<p>Record Saved</p>';
         } else {
@@ -326,7 +342,11 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
         <form action = "<?php print PHP_SELF; ?>"
               id = "frmRegister"
-              method = "post">
+              method = "post"
+              >
+            
+            <input type="hidden" id="hidTrailsId" name="hidTrailsId"
+                   value ="<?php $pmkTrailsId; ?>"
 
             <fieldset  class="listbox <?php if ($trailERROR) print ' mistake'; ?>">
                 <p>
@@ -334,20 +354,20 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                 <select id="lstTrails" 
                         name="lstTrails" 
                         tabindex="520" >
-                    <option <?php if ($fldHikingTime == "Camel's Hump") print " selected "; ?>
-                        value="1">Camel's Hump</option>
+                    <option <?php if ($fldTrailName == "Camel's Hump") print " selected "; ?>
+                        value="Camel's Hump">Camel's Hump</option>
 
-                    <option <?php if ($fldHikingTime == "Snake Mountain") print " selected "; ?>
-                        value="2">Snake Mountain</option>
+                    <option <?php if ($fldTrailName == "Snake Mountain") print " selected "; ?>
+                        value="Snake Mountain">Snake Mountain</option>
 
-                    <option <?php if ($fldHikingTime == "Prospect Rock (Manchester)") print " selected "; ?>
-                        value="3">Prospect Rock (Manchester)</option>
+                    <option <?php if ($fldTrailName == "Prospect Rock (Manchester)") print " selected "; ?>
+                        value="Prospect Rock (Manchester)">Prospect Rock (Manchester)</option>
                     
-                    <option <?php if ($fldHikingTime == "Skylight Pond") print " selected "; ?>
-                        value="4">Skylight Pond</option>
+                    <option <?php if ($fldTrailName == "Skylight Pond") print " selected "; ?>
+                        value="Skylight Pond">Skylight Pond</option>
                     
-                    <option <?php if ($fldHikingTime == "Mount Pisgah") print " selected "; ?>
-                        value="5">Mount Pisgah</option>
+                    <option <?php if ($fldTrailName == "Mount Pisgah") print " selected "; ?>
+                        value="Mount Pisgah">Mount Pisgah</option>
                     
                 </select>
                 </p>
@@ -368,7 +388,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                         placeholder = ""
                         tabindex = "120"
                         type = "text"
-                        value = "<?php $distance; ?>"
+                        value = "<?php print $fldTotalDistance; ?>"
                         >
 
                 </p>     
@@ -389,7 +409,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                         placeholder = "HH:MM:SS"
                         tabindex = "120"
                         type = "text"
-                        value = "<?php $time; ?>"
+                        value = "<?php print $fldHikingTime; ?>"
                         >
 
                 </p>     
@@ -410,7 +430,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                         placeholder = ""
                         tabindex = "120"
                         type = "text"
-                        value = "<?php $verticalRise; ?>"
+                        value = "<?php print $fldVerticalRise; ?>"
                         >
 
                 </p>     
