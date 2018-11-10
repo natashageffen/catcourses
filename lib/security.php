@@ -16,8 +16,8 @@ function securityCheck($myFormURL = "") {
         $fromPage = htmlentities($_SERVER['HTTP_REFERER'], ENT_QUOTES, 'UTF-8');
         
         //remove http or https
-        $fromPage = preg_replace('#^https?:#', '', $fromPage);
-        
+       
+          $fromPage = strtok(preg_replace('#^https?:#', '', $fromPage), '?');
         if ($debugThis)
             print '<p>From: ' . $fromPage . ' should match your Url: ' . $myFormURL;
         

@@ -23,7 +23,7 @@
         
         $isAdmin = true;
         
-        $fromPage = strtok(preg_replace('#^https?:#', '', $fromPage), '?');
+      
 
         
         print '<!-- begin including libraries -->';

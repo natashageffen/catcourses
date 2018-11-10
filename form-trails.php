@@ -47,11 +47,15 @@ $pmkTag = 0;
 
 
 
+
 if (isset($_GET["id"])) {
     $pmkTrailsId = (int) htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
 
     $query = 'SELECT fldTrailName, fldTotalDistance, fldHikingTime, fldVerticalRise, fldRating ';
     $query .= 'FROM tblTrails WHERE pmkTrailsId = ?';
+
+    
+    
 
     $data = array($pmkTrailsId);
 
@@ -59,18 +63,84 @@ if (isset($_GET["id"])) {
         $query = $thisDatabaseReader->sanitizeQuery($query);
         $trail = $thisDatabaseReader->select($query, $data);
     }
+    
+    
+    
+    print "<p>trail array:<pre>";
+    print_r($trail);
+    print "</pre>";
+    
+    $query = 'SELECT pfkTrailsId, pfkTag ';
+    $query .= 'FROM tblTrailsTags WHERE pfkTrailsId =?';
+    
+    //2 arrays 
+    Array
+    (
+        [0] => Array
+        (
+            [pfkTag] => 'Dogs Allowed',
+            [0] => 'Dogs Allowed',
+            [pfkTrailsId] => 0,
+            [1] => 0
+        ),
+        
+        [1] => Array
+        (
+            [pfkTag] => 'Easy',
+            [0] => 'Easy',
+            [pfkTrailsId] => 0,
+            [1] => 0
+        ),
+        
+        [2] => Array
+        (
+            [pfkTag] => 'Hard',
+            [0] => 'Hard',
+            [pfkTrailsId] => 0,
+            [1] => 0
+        ),
+        
+        [3] => Array
+        (
+            [pfkTag] => 'Hiking',
+            [0] => 'Hiking',
+            [pfkTrailsId] => 0,
+            [1] => 0
+        ),
+        
+        [4] => Array
+        (
+            [pfkTag] => 'Skiing',
+            [0] => 'Skiing',
+            [pfkTrailsId] => 0,
+            [1] => 0
+        ),
+        
+        [5] => Array
+        (
+            [pfkTag] => 'Views',
+            [0] => 'Views',
+            [pfkTrailsId] => 0,
+            [1] => 0
+        )
+      );
 
-    print "<p>trail array:<pre>"; print_r($trail); print "</pre>";
+    //for loop -set column #1 all to 0s
+    
+    //for each update tags as update tag
+    //for loop - if value in array tags 
+    
+    
+   //$_POST[3][fldHobby]
+    
     
     $fldTrailName = $trail[0]["fldTrailName"];
     $fldTotalDistance = $trail[0]["fldTotalDistance"];
     $fldHikingTime = $trail[0]["fldHikingTime"];
     $fldVerticalRise = $trail[0]["fldVerticalRise"];
     $fldRating = $trail[0]["fldRating"];
-    
-    
 }
-    
+
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^% 
 //
 print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
@@ -122,6 +192,7 @@ if (isset($_POST["btnSubmit"])) {
 
 
     $pmkTrailsId = (int) htmlentities($_POST["hidTrailsId"], ENT_QUOTES, "UTF-8");
+    
     if ($pmkTrailsId > 0) {
         $update = true;
     }
@@ -183,18 +254,18 @@ if (isset($_POST["btnSubmit"])) {
 
 
 
-        if($_POST['radRating'] == -1) {
-            $errorMsg[] = 'Please select a rating.';
-            $ratingERROR = true;
-        }
-    
+    if ($_POST['radRating'] == -1) {
+        $errorMsg[] = 'Please select a rating.';
+        $ratingERROR = true;
+    }
 
- 
-        if($_POST['chkTag'] == -1) {
-            $errorMsg[] = 'Please select a tag.';
-            $tagERROR = true;
-        } 
-    
+
+
+    if ($_POST['chkTag'] == -1) {
+        $errorMsg[] = 'Please select a tag.';
+        $tagERROR = true;
+    }
+
 
 
 
@@ -225,34 +296,46 @@ if (isset($_POST["btnSubmit"])) {
         $dataRecord[] = $fldRating;
 
         if ($update) {
-                $query = 'UPDATE tblTrails SET ';
-            } else {
-                $query = 'INSERT INTO tblTrails SET ';
-            }
+            $query = 'UPDATE tblTrails SET ';
+            $query.= 'fldTrailName = ?, ';
+            $query.= 'fldTotalDistance = ?, ';
+            $query.= 'fldHikingTime = ?, ';
+            $query.= 'fldVerticalRise = ?, ';
+            $query.= 'fldRating = ?, ';
+        } else {
+            
+            $query = "INSERT INTO tblTrails(fldTrailName, fldTotalDistance, fldHikingTime, fldVerticalRise, fldRating) ";
+            $query .= "VALUES(?, ?, ?, ?, ?)";
+        }
 
 
 
-        $query = "INSERT INTO tblTrails(fldTrailName, fldTotalDistance, fldHikingTime, fldVerticalRise, fldRating) ";
-        $query .= "VALUES(?, ?, ?, ?, ?)";
+//      
 //thisDatabaseWriter->testSecurityQuery($query, 0);
         // print $query;
         //print_r($dataRecord);
         if ($update) {
-                $query .= 'WHERE pmkTrailsId = ?';
-                $data[] = $pmkTrailsId;
+            $query .= 'WHERE pmkTrailsId = ?';
+            $data[] = $pmkTrailsId;
 
-                if ($thisDatabaseReader->querySecurityOk($query, 1)) {
-                    $query = $thisDatabaseWriter->sanitizeQuery($query);
-                    $results = $thisDatabaseWriter->update($query, $data);
-                }
-            } else {
-                    if ($thisDatabaseWriter->querySecurityOk($query, 0)) {
-                        $query = $thisDatabaseReader->sanitizeQuery($query);
-                        $records = $thisDatabaseWriter->insert($query, $dataRecord);
-                    }
+            if ($thisDatabaseReader->querySecurityOk($query, 1)) {
+                $query = $thisDatabaseWriter->sanitizeQuery($query);
+                $records = $thisDatabaseWriter->update($query, $data);
             }
+        } else {
+            if ($thisDatabaseWriter->querySecurityOk($query, 0)) {
+                $query = $thisDatabaseReader->sanitizeQuery($query);
+                $records = $thisDatabaseWriter->insert($query, $dataRecord);
+            }
+        }
         if ($records) {
-            print '<p>Record Saved</p>';
+            if ($update) {
+                print '<p>Record updated</p>';
+            } else {
+
+
+                print '<p>Record Saved</p>';
+            }
         } else {
             print '<p>Record NOT Saved</p>';
         }
@@ -286,43 +369,43 @@ if (isset($_POST["btnSubmit"])) {
     ?>       
 
 
-<?php
+    <?php
 //####################################
 //
-print PHP_EOL . '<!-- SECTION 3a  -->' . PHP_EOL;
+    print PHP_EOL . '<!-- SECTION 3a  -->' . PHP_EOL;
 // 
 // If its the first time coming to the form or there are errors we are going
 // to display the form.
 
-if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-    print '<h2>Thank you for providing your information.</h2>';
-    print $message;
-} else {
+    if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
+        print '<h2>Thank you for providing your information.</h2>';
+        print $message;
+    } else {
 
-    print '<h2>Tell us about your hike.</h2>';
+        print '<h2>Tell us about your hike.</h2>';
 
 
-    //####################################
-    //
+        //####################################
+        //
         print PHP_EOL . '<!-- SECTION 3b Error Messages -->' . PHP_EOL;
-    //
-    // display any error messages before we print out the form
+        //
+        // display any error messages before we print out the form
 
-    if ($errorMsg) {
-        print '<div id="errors">' . PHP_EOL;
-        print '<h2>Your form has the following mistakes that need to be fixed.</h2>' . PHP_EOL;
-        print '<ol>' . PHP_EOL;
+        if ($errorMsg) {
+            print '<div id="errors">' . PHP_EOL;
+            print '<h2>Your form has the following mistakes that need to be fixed.</h2>' . PHP_EOL;
+            print '<ol>' . PHP_EOL;
 
-        foreach ($errorMsg as $err) {
-            print '<li>' . $err . '</li>' . PHP_EOL;
+            foreach ($errorMsg as $err) {
+                print '<li>' . $err . '</li>' . PHP_EOL;
+            }
+
+            print '</ol>' . PHP_EOL;
+            print '</div>' . PHP_EOL;
         }
 
-        print '</ol>' . PHP_EOL;
-        print '</div>' . PHP_EOL;
-    }
-
-    //####################################
-    //
+        //####################################
+        //
         print PHP_EOL . '<!-- SECTION 3c html Form -->' . PHP_EOL;
 
 
@@ -336,204 +419,202 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 //        $query = $thisDatabaseReader->sanitizeQuery($query);
 //        $hikers = $thisDatabaseReader->select($query);
 //    }
-       
-
-    if ($isAdmin == true) {
-    ?> 
-        <form action = "<?php print PHP_SELF; ?>"
-              id = "frmRegister"
-              method = "post"
-              >
-            
-            <input type="hidden" id="hidTrailsId" name="hidTrailsId"
-                   value ="<?php $pmkTrailsId; ?>"
-
-            <fieldset  class="listbox <?php if ($trailERROR) print ' mistake'; ?>">
-                <p>
-                <legend>Trail Name</legend>
-                <select id="lstTrails" 
-                        name="lstTrails" 
-                        tabindex="520" >
-                    <option <?php if ($fldTrailName == "Camel's Hump") print " selected "; ?>
-                        value="Camel's Hump">Camel's Hump</option>
-
-                    <option <?php if ($fldTrailName == "Snake Mountain") print " selected "; ?>
-                        value="Snake Mountain">Snake Mountain</option>
-
-                    <option <?php if ($fldTrailName == "Prospect Rock (Manchester)") print " selected "; ?>
-                        value="Prospect Rock (Manchester)">Prospect Rock (Manchester)</option>
-                    
-                    <option <?php if ($fldTrailName == "Skylight Pond") print " selected "; ?>
-                        value="Skylight Pond">Skylight Pond</option>
-                    
-                    <option <?php if ($fldTrailName == "Mount Pisgah") print " selected "; ?>
-                        value="Mount Pisgah">Mount Pisgah</option>
-                    
-                </select>
-                </p>
-            </fieldset>
-
-            <fieldset class = "distance">
 
 
-                <p>
-                    <label class = "required" for = "txtDistance">Total Distance:</label>
+        if ($isAdmin == true) {
+            ?> 
+            <form action = "<?php print PHP_SELF; ?>"
+                  id = "frmRegister"
+                  method = "post"
+                  >
 
-                    <input 
-    <?php if ($distanceERROR) print 'class="mistake"'; ?>
-                        id = "txtDistance"     
-                        maxlength = "45"
-                        name = "txtDistance"
-                        onfocus = "this.select()"
-                        placeholder = ""
-                        tabindex = "120"
-                        type = "text"
-                        value = "<?php print $fldTotalDistance; ?>"
-                        >
+                <input type="hidden" id="hidTrailsId" name="hidTrailsId"
+                       value ="<?php print $pmkTrailsId; ?>"
 
-                </p>     
-            </fieldset> 
+                       <fieldset  class="listbox <?php if ($trailERROR) print ' mistake'; ?>">
+                    <p>
+                    <legend>Trail Name</legend>
+                    <select id="lstTrails" 
+                            name="lstTrails" 
+                            tabindex="520" >
+                        <option <?php if ($fldTrailName == "Camel's Hump") print " selected "; ?>
+                            value="Camel's Hump">Camel's Hump</option>
 
-            <fieldset class = "time">
+                        <option <?php if ($fldTrailName == "Snake Mountain") print " selected "; ?>
+                            value="Snake Mountain">Snake Mountain</option>
 
+                        <option <?php if ($fldTrailName == "Prospect Rock (Manchester)") print " selected "; ?>
+                            value="Prospect Rock (Manchester)">Prospect Rock (Manchester)</option>
 
-                <p>
-                    <label class = "required" for = "txtTime">Hiking Time:</label>
+                        <option <?php if ($fldTrailName == "Skylight Pond") print " selected "; ?>
+                            value="Skylight Pond">Skylight Pond</option>
 
-                    <input 
-    <?php if ($timeERROR) print 'class="mistake"'; ?>
-                        id = "txtTime"     
-                        maxlength = "45"
-                        name = "txtTime"
-                        onfocus = "this.select()"
-                        placeholder = "HH:MM:SS"
-                        tabindex = "120"
-                        type = "text"
-                        value = "<?php print $fldHikingTime; ?>"
-                        >
+                        <option <?php if ($fldTrailName == "Mount Pisgah") print " selected "; ?>
+                            value="Mount Pisgah">Mount Pisgah</option>
 
-                </p>     
-            </fieldset> 
+                    </select>
+                    </p>
+                </fieldset>
 
-            <fieldset class = "distance">
+                <fieldset class = "distance">
 
 
-                <p>
-                    <label class = "required" for = "txtVerticalRise">Vertical Rise:</label>
+                    <p>
+                        <label class = "required" for = "txtDistance">Total Distance:</label>
 
-                    <input 
-    <?php if ($verticalRiseERROR) print 'class="mistake"'; ?>
-                        id = "txtVerticalRise"     
-                        maxlength = "45"
-                        name = "txtVerticalRise"
-                        onfocus = "this.select()"
-                        placeholder = ""
-                        tabindex = "120"
-                        type = "text"
-                        value = "<?php print $fldVerticalRise; ?>"
-                        >
+                        <input 
+                        <?php if ($distanceERROR) print 'class="mistake"'; ?>
+                            id = "txtDistance"     
+                            maxlength = "45"
+                            name = "txtDistance"
+                            onfocus = "this.select()"
+                            placeholder = ""
+                            tabindex = "120"
+                            type = "text"
+                            value = "<?php print $fldTotalDistance; ?>"
+                            >
 
-                </p>     
-            </fieldset> 
-            
+                    </p>     
+                </fieldset> 
+
+                <fieldset class = "time">
+
+
+                    <p>
+                        <label class = "required" for = "txtTime">Hiking Time:</label>
+
+                        <input 
+                        <?php if ($timeERROR) print 'class="mistake"'; ?>
+                            id = "txtTime"     
+                            maxlength = "45"
+                            name = "txtTime"
+                            onfocus = "this.select()"
+                            placeholder = "HH:MM:SS"
+                            tabindex = "120"
+                            type = "text"
+                            value = "<?php print $fldHikingTime; ?>"
+                            >
+
+                    </p>     
+                </fieldset> 
+
+                <fieldset class = "distance">
+
+
+                    <p>
+                        <label class = "required" for = "txtVerticalRise">Vertical Rise:</label>
+
+                        <input 
+                        <?php if ($verticalRiseERROR) print 'class="mistake"'; ?>
+                            id = "txtVerticalRise"     
+                            maxlength = "45"
+                            name = "txtVerticalRise"
+                            onfocus = "this.select()"
+                            placeholder = ""
+                            tabindex = "120"
+                            type = "text"
+                            value = "<?php print $fldVerticalRise; ?>"
+                            >
+
+                    </p>     
+                </fieldset> 
+
                 <fieldset class="radio <?php if ($ratingERROR) print ' mistake'; ?>">
                     <legend>Trail Rating:</legend>
                     <p>    
                         <label class="radio-field"><input type="radio" id="radRatingEasy" name="radRating" value="Easy" tabindex="572" 
-    <?php if ($fldRating == "Easy") echo ' checked="checked" '; ?>>
+                                                          <?php if ($fldRating == "Easy") echo ' checked="checked" '; ?>>
                             Easy</label>
                     </p>
                     <p>
                         <label class="radio-field"><input type="radio" id="radRatingModerate" name="radRating" value="Moderate" tabindex="574" 
-    <?php if ($fldRating == "Moderate") echo ' checked="checked" '; ?>>
+                                                          <?php if ($fldRating == "Moderate") echo ' checked="checked" '; ?>>
                             Moderate</label>
                     </p>
 
                     <p>
                         <label class="radio-field"><input type="radio" id="radRatingModeratelyStrenuous" name="radRating" value="Moderately Strenuous" tabindex="574" 
-    <?php if ($fldRating == "Moderately Strenuous") echo ' checked="checked" '; ?>>
+                                                          <?php if ($fldRating == "Moderately Strenuous") echo ' checked="checked" '; ?>>
                             Moderately Strenuous </label>
                     </p>
-                    
+
                     <p>
                         <label class="radio-field"><input type="radio" id="radRatingStrenuous" name="radRating" value="Strenuous" tabindex="574" 
-    <?php if ($fldRating == "Strenuous") echo ' checked="checked" '; ?>>
+                                                          <?php if ($fldRating == "Strenuous") echo ' checked="checked" '; ?>>
                             Strenuous </label>
                     </p>
                 </fieldset>
-            
-            <fieldset class="checkbox <?php if ($activityERROR) print ' mistake'; ?>">
-    <legend>Check the boxes that apply to this hike:</legend>
 
-    <p>
-        <label class="check-field">
-            <input <?php if ($pmkTag == "Dogs Allowed") print " checked "; ?>
-                id="chkTagDogsAllowed"
-                name="chkTag"
-                tabindex="420"
-                type="checkbox"
-                value="Dogs Allowed"> Dogs Allowed</label>
-    </p>
+                <fieldset class="checkbox <?php if ($activityERROR) print ' mistake'; ?>">
+                    <legend>Check the boxes that apply to this hike:</legend>
 
-    <p>
-        <label class="check-field">
-            <input <?php if ($pmkTag == "Easy") print " unchecked "; ?>
-                id="chkTagEasy"
-                name="chkTag"
-                tabindex="420"
-                type="checkbox"
-                value="Easy"> Easy</label>
-        
-        <label class="check-field">
-            <input <?php if ($pmkTag == "Hard") print " unchecked "; ?>
-                id="chkTagHard"
-                name="chkTag"
-                tabindex="420"
-                type="checkbox"
-                value="Hard"> Hard</label>
-    </p>
-    
-    
-    <label class="check-field">
-            <input <?php if ($pmkTag == "Hiking") print " unchecked "; ?>
-                id="chkTagHiking"
-                name="chkTag"
-                tabindex="420"
-                type="checkbox"
-                value="Hiking"> Hiking</label>
-    
-    <label class="check-field">
-            <input <?php if ($pmkTag == "Skiing") print " unchecked "; ?>
-                id="chkTagSkiing"
-                name="chkTag"
-                tabindex="420"
-                type="checkbox"
-                value="Skiing"> Skiing</label>
-    
-    <label class="check-field">
-            <input <?php if ($pmkTag == "Views") print " unchecked "; ?>
-                id="chkTagViews"
-                name="chkTag"
-                tabindex="420"
-                type="checkbox"
-                value="Views"> Views</label>
-</fieldset>
-            
-            <fieldset class="buttons">
-                <legend></legend>
-                <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Register" >
-            </fieldset> <!-- ends buttons -->
-        </form>     
+                    <p>
+                        <label class="check-field">
+                            <input <?php if ($pmkTag == "Dogs Allowed") print " checked "; ?>
+                                id="chkTagDogsAllowed"
+                                name="chkTag"
+                                tabindex="420"
+                                type="checkbox"
+                                value="Dogs Allowed"> Dogs Allowed</label>
+                    </p>
 
-    <?php
-} 
-else{
-    print '<p>You are not authorized to see this page.</p>';
-    
-}
-}
+                    <p>
+                        <label class="check-field">
+                            <input <?php if ($pmkTag == "Easy") print " unchecked "; ?>
+                                id="chkTagEasy"
+                                name="chkTag"
+                                tabindex="420"
+                                type="checkbox"
+                                value="Easy"> Easy</label>
 
-?>
+                        <label class="check-field">
+                            <input <?php if ($pmkTag == "Hard") print " unchecked "; ?>
+                                id="chkTagHard"
+                                name="chkTag"
+                                tabindex="420"
+                                type="checkbox"
+                                value="Hard"> Hard</label>
+                    </p>
+
+
+                    <label class="check-field">
+                        <input <?php if ($pmkTag == "Hiking") print " unchecked "; ?>
+                            id="chkTagHiking"
+                            name="chkTag"
+                            tabindex="420"
+                            type="checkbox"
+                            value="Hiking"> Hiking</label>
+
+                    <label class="check-field">
+                        <input <?php if ($pmkTag == "Skiing") print " unchecked "; ?>
+                            id="chkTagSkiing"
+                            name="chkTag"
+                            tabindex="420"
+                            type="checkbox"
+                            value="Skiing"> Skiing</label>
+
+                    <label class="check-field">
+                        <input <?php if ($pmkTag == "Views") print " unchecked "; ?>
+                            id="chkTagViews"
+                            name="chkTag"
+                            tabindex="420"
+                            type="checkbox"
+                            value="Views"> Views</label>
+                </fieldset>
+
+                <fieldset class="buttons">
+                    <legend></legend>
+                    <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Register" >
+                </fieldset> <!-- ends buttons -->
+            </form>     
+
+            <?php
+        }
+        else {
+            print '<p>You are not authorized to see this page.</p>';
+        }
+    }
+    ?>
 </fieldset>     
 
 
