@@ -37,13 +37,16 @@ print PHP_EOL . '<!-- SECTION: 1b form variables -->' . PHP_EOL;
 // in the order they appear on the form
 
 
-$pmkTrailsId = -1;
-$fldTrailName = 0;
-$fldTotalDistance = "";
-$fldHikingTime = "HH:MM:SS";
-$fldVerticalRise = "";
-$fldRating = 0;
-$pmkTag = 0;
+$pmkCourseId = -1;
+$fldSubject = 0;
+$fldNumber = 0;
+$fldTitle = 0;
+$fldClassStanding = 0;
+$fldDifficultyLevel = 0;
+$fldTag = 0;
+$fldMajor = 0;
+$fldSkills = "";
+$fldComments = "";
 
 
 
@@ -51,94 +54,35 @@ $pmkTag = 0;
 if (isset($_GET["id"])) {
     $pmkTrailsId = (int) htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
 
-    $query = 'SELECT fldTrailName, fldTotalDistance, fldHikingTime, fldVerticalRise, fldRating ';
-    $query .= 'FROM tblTrails WHERE pmkTrailsId = ?';
+    $query = 'SELECT pmkCourseId, fldSubject, fldNumber, fldTitle, fldClassStanding, fldDifficultyLevel, fldTag, fldMajor, fldSkills, fldComments ';
+    $query .= 'FROM tblCourses WHERE pmkCourseId = ?';
 
-    
-    
 
-    $data = array($pmkTrailsId);
+
+
+    $data = array($pmkCourseId);
 
     if ($thisDatabaseReader->querySecurityOk($query, 1)) {
         $query = $thisDatabaseReader->sanitizeQuery($query);
-        $trail = $thisDatabaseReader->select($query, $data);
+        $course = $thisDatabaseReader->select($query, $data);
     }
-    
-    
-    
-    print "<p>trail array:<pre>";
-    print_r($trail);
-    print "</pre>";
-    
-    $query = 'SELECT pfkTrailsId, pfkTag ';
-    $query .= 'FROM tblTrailsTags WHERE pfkTrailsId =?';
-    
-    //2 arrays 
-    Array
-    (
-        [0] => Array
-        (
-            [pfkTag] => 'Dogs Allowed',
-            [0] => 'Dogs Allowed',
-            [pfkTrailsId] => 0,
-            [1] => 0
-        ),
-        
-        [1] => Array
-        (
-            [pfkTag] => 'Easy',
-            [0] => 'Easy',
-            [pfkTrailsId] => 0,
-            [1] => 0
-        ),
-        
-        [2] => Array
-        (
-            [pfkTag] => 'Hard',
-            [0] => 'Hard',
-            [pfkTrailsId] => 0,
-            [1] => 0
-        ),
-        
-        [3] => Array
-        (
-            [pfkTag] => 'Hiking',
-            [0] => 'Hiking',
-            [pfkTrailsId] => 0,
-            [1] => 0
-        ),
-        
-        [4] => Array
-        (
-            [pfkTag] => 'Skiing',
-            [0] => 'Skiing',
-            [pfkTrailsId] => 0,
-            [1] => 0
-        ),
-        
-        [5] => Array
-        (
-            [pfkTag] => 'Views',
-            [0] => 'Views',
-            [pfkTrailsId] => 0,
-            [1] => 0
-        )
-      );
 
-    //for loop -set column #1 all to 0s
-    
-    //for each update tags as update tag
-    //for loop - if value in array tags 
-    
-    
-   //$_POST[3][fldHobby]
-    
-    
-    $fldTrailName = $trail[0]["fldTrailName"];
-    $fldTotalDistance = $trail[0]["fldTotalDistance"];
-    $fldHikingTime = $trail[0]["fldHikingTime"];
-    $fldVerticalRise = $trail[0]["fldVerticalRise"];
-    $fldRating = $trail[0]["fldRating"];
+
+
+    print "<p>course array:<pre>";
+    print_r($course);
+    print "</pre>";
+
+
+    $fldSubject = $course[0]["fldSubject"];
+    $fldNumber = $course[0]["fldNumber"];
+    $fldTitle = $course[0]["fldTitle"];
+    $fldClassStanding = $course[0]["fldClassStanding"];
+    $fldDifficultyLevel = $course[0]["fldDifficultyLevel"];
+    $fldTag = $course[0]["fldTag"];
+    $fldMajor = $course[0]["fldMajor"];
+    $fldSkills = $course[0]["fldSkills"];
+    $fldComments = $course[0]["fldComments"];
 }
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^% 
@@ -148,12 +92,15 @@ print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
 // Initialize Error Flags one for each form element we validate
 // in the order they appear on the form
 
-$trailERROR = false;
-$distanceERROR = false;
-$timeERROR = false;
-$verticalRiseERROR = false;
-$ratingERROR = false;
+$subjectERROR = false;
+$numberERROR = false;
+$titleERROR = false;
+$classStandingERROR = false;
+$difficultyLevelERROR = false;
 $tagERROR = false;
+$majorERROR = false;
+
+
 
 
 ////%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -191,19 +138,21 @@ if (isset($_POST["btnSubmit"])) {
     // form. Note it is best to follow the same order as declared in section 1c.
 
 
-    $pmkTrailsId = (int) htmlentities($_POST["hidTrailsId"], ENT_QUOTES, "UTF-8");
-    
-    if ($pmkTrailsId > 0) {
+    $pmkCourseId = (int) htmlentities($_POST["hidCourseId"], ENT_QUOTES, "UTF-8");
+
+    if ($pmkCourseId > 0) {
         $update = true;
     }
-    $fldTrailName = htmlentities($_POST["lstTrails"], ENT_QUOTES, "UTF-8");
-    $fldTotalDistance = htmlentities($_POST["txtDistance"], ENT_QUOTES, "UTF-8");
-    $fldHikingTime = htmlentities($_POST["txtTime"], ENT_QUOTES, "UTF-8");
-    $fldVerticalRise = htmlentities($_POST["txtVerticalRise"], ENT_QUOTES, "UTF-8");
-    $fldRating = (int) htmlentities($_POST["radRating"], ENT_QUOTES, "UTF-8");
-    $pmkTag = (int) htmlentities($_POST["chkTag"], ENT_QUOTES, "UTF-8");
 
-
+    $fldSubject = htmlentities($_POST["lstSubjects"], ENT_QUOTES, "UTF-8");
+    $fldnumber = htmlentities($_POST["lstNumbers"], ENT_QUOTES, "UTF-8");
+    $fldClassStanding = htmlentities($_POST["radClassStandings"], ENT_QUOTES, "UTF-8");
+    $fldDifficultyLevel = htmlentities($_POST["radDifficultyLevels"], ENT_QUOTES, "UTF-8");
+    $fldTag = htmlentities($_POST["chkTags"], ENT_QUOTES, "UTF-8");
+    $fldMajor = htmlentities($_POST["lstMajors"], ENT_QUOTES, "UTF-8");
+    $fldSkills = htmlentities($_POST["txtSkills"], ENT_QUOTES, "UTF-8");
+    $fldComments = htmlentities($_POST["txtComments"], ENT_QUOTES, "UTF-8");
+   
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
     print PHP_EOL . '<!-- SECTION: 2c Validation -->' . PHP_EOL;
@@ -215,57 +164,58 @@ if (isset($_POST["btnSubmit"])) {
     // will be in the order they appear. errorMsg will be displayed on the form
     // see section 3b. The error flag ($emailERROR) will be used in section 3c.
 
+ 
 
-
-    if ($fldTrailName == "") {
-        $errorMsg[] = 'Please select a trail.';
-        $trailERROR = true;
-    } elseif (!verifyAlpha($fldTrailName)) {
-        $errorMsg[] = 'This trail appears to be incorrect.';
-        $trailERROR = true;
+    if ($fldSubject == "") {
+        $errorMsg[] = 'Please select a subject.';
+        $subjectERROR = true;
+    } elseif (!verifyAlpha($fldSubject)) {
+        $errorMsg[] = 'This subject appears to be incorrect.';
+        $subjectERROR = true;
     }
 
 
-    if ($fldTotalDistance == "") {
-        $errorMsg[] = 'Please enter a distance';
-        $distanceERROR = true;
-    } elseif (!is_numeric($fldTotalDistance)) {
-        $errorMsg[] = 'This distance appears to be incorrect.';
-        $distanceERROR = true;
+    if ($fldNumber == "") {
+        $errorMsg[] = 'Please select a number';
+        $numberERROR = true;
+    } elseif (!is_numeric($fldNumber)) {
+        $errorMsg[] = 'This number appears to be incorrect.';
+        $numberERROR = true;
     }
 
-
-    if ($fldHikingTime == "") {
-        $errorMsg[] = 'Please enter a time';
-        $timeERROR = true;
-    } elseif (!verifyTime($fldHikingTime)) {
-        $errorMsg[] = 'This time appears to be incorrect.';
-        $timeERROR = true;
+    if ($fldTitle == "") {
+        $errorMsg[] = 'Please select a title.';
+        $titleERROR = true;
+    } 
+    
+    if ($_POST ['radClassStandings'] == -1) {
+        $errorMsg[] = 'Please select a class standing.';
+        $classStandingERROR = true;
+    } 
+    
+    if ($_POST ['radDifficultyLevels'] == -1) {
+        $errorMsg[] = 'Please select a difficulty level.';
+        $difficultyLevelERROR = true;
+    } elseif (!verifyAlpha($fldDifficultyLevel)) {
+        $errorMsg[] = 'This difficulty level appears to be incorrect.';
+        $difficultyLevelERROR = true;
     }
-
-
-    if ($fldVerticalRise == "") {
-        $errorMsg[] = 'Please enter a vertical rise';
-        $verticalRiseERROR = true;
-    } elseif (!is_numeric($fldVerticalRise)) {
-        $errorMsg[] = 'This vertical rise appears to be incorrect.';
-        $verticalRiseERROR = true;
-    }
-
-
-
-    if ($_POST['radRating'] == -1) {
-        $errorMsg[] = 'Please select a rating.';
-        $ratingERROR = true;
-    }
-
-
-
-    if ($_POST['chkTag'] == -1) {
+    
+    if ($_POST ['chkTags'] == "") {
         $errorMsg[] = 'Please select a tag.';
         $tagERROR = true;
-    }
+    } 
 
+    if ($fldMajor == "") {
+        $errorMsg[] = 'Please select a major.';
+        $majorERROR = true;
+    } elseif (!verifyAlpha($fldMajor)) {
+        $errorMsg[] = 'This major appears to be incorrect.';
+        $majorERROR = true;
+    }
+    
+
+   
 
 
 
@@ -289,21 +239,29 @@ if (isset($_POST["btnSubmit"])) {
         $dataRecord = array();
 
         // assign values to the dataRecord array
-        $dataRecord[] = $fldTrailName;
-        $dataRecord[] = $fldTotalDistance;
-        $dataRecord[] = $fldHikingTime;
-        $dataRecord[] = $fldVerticalRise;
-        $dataRecord[] = $fldRating;
+        $dataRecord[] = $fldSubject;
+        $dataRecord[] = $fldNumber;
+        $dataRecord[] = $fldTitle;
+        $dataRecord[] = $fldClassStanding;
+        $dataRecord[] = $fldDifficultyLevel;
+        $dataRecord[] = $fldTag;
+        $dataRecord[] = $fldMajor;
+        $dataRecord[] = $fldSkills;
+        $dataRecord[] = $fldComments;
+              
+
+        print_r($dataRecord);
+
 
         if ($update) {
             $query = 'UPDATE tblTrails SET ';
-            $query.= 'fldTrailName = ?, ';
-            $query.= 'fldTotalDistance = ?, ';
-            $query.= 'fldHikingTime = ?, ';
-            $query.= 'fldVerticalRise = ?, ';
-            $query.= 'fldRating = ?, ';
+            $query .= 'fldTrailName = ?, ';
+            $query .= 'fldTotalDistance = ?, ';
+            $query .= 'fldHikingTime = ?, ';
+            $query .= 'fldVerticalRise = ?, ';
+            $query .= 'fldRating = ? ';
         } else {
-            
+
             $query = "INSERT INTO tblTrails(fldTrailName, fldTotalDistance, fldHikingTime, fldVerticalRise, fldRating) ";
             $query .= "VALUES(?, ?, ?, ?, ?)";
         }
@@ -313,14 +271,18 @@ if (isset($_POST["btnSubmit"])) {
 //      
 //thisDatabaseWriter->testSecurityQuery($query, 0);
         // print $query;
-        //print_r($dataRecord);
+        //print_r($dataRecord); 
+
+
+
+
         if ($update) {
             $query .= 'WHERE pmkTrailsId = ?';
-            $data[] = $pmkTrailsId;
+            $dataRecord[] = $pmkTrailsId;
 
             if ($thisDatabaseReader->querySecurityOk($query, 1)) {
                 $query = $thisDatabaseWriter->sanitizeQuery($query);
-                $records = $thisDatabaseWriter->update($query, $data);
+                $records = $thisDatabaseWriter->update($query, $dataRecord);
             }
         } else {
             if ($thisDatabaseWriter->querySecurityOk($query, 0)) {
@@ -338,6 +300,7 @@ if (isset($_POST["btnSubmit"])) {
             }
         } else {
             print '<p>Record NOT Saved</p>';
+            print_r($dataRecord);
         }
 
         print PHP_EOL . '<!-- SECTION: 2f Create message -->' . PHP_EOL;
