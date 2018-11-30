@@ -254,16 +254,20 @@ if (isset($_POST["btnSubmit"])) {
 
 
         if ($update) {
-            $query = 'UPDATE tblTrails SET ';
-            $query .= 'fldTrailName = ?, ';
-            $query .= 'fldTotalDistance = ?, ';
-            $query .= 'fldHikingTime = ?, ';
-            $query .= 'fldVerticalRise = ?, ';
-            $query .= 'fldRating = ? ';
+            $query = 'UPDATE tblCourses SET ';
+            $query .= 'fldSubject = ?, ';
+            $query .= 'fldNumber = ?, ';
+            $query .= 'fldTitle = ?, ';
+            $query .= 'fldClassStanding = ?, ';
+            $query .= 'fldDifficultyLevel = ? ';
+            $query .= 'fldTag = ? ';
+            $query .= 'fldMajor = ? ';
+            $query .= 'fldSkills = ? ';
+            $query .= 'fldComments = ? ';
         } else {
 
-            $query = "INSERT INTO tblTrails(fldTrailName, fldTotalDistance, fldHikingTime, fldVerticalRise, fldRating) ";
-            $query .= "VALUES(?, ?, ?, ?, ?)";
+            $query = "INSERT INTO tblCourses(fldSubject, fldNumber, fldTitle, fldClassStanding, fldDifficultyLevel, fldTag, fldMajor, fldSkills, fldComments) ";
+            $query .= "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         }
 
 
@@ -277,8 +281,8 @@ if (isset($_POST["btnSubmit"])) {
 
 
         if ($update) {
-            $query .= 'WHERE pmkTrailsId = ?';
-            $dataRecord[] = $pmkTrailsId;
+            $query .= 'WHERE pmkCourseId = ?';
+            $dataRecord[] = $pmkCourseId;
 
             if ($thisDatabaseReader->querySecurityOk($query, 1)) {
                 $query = $thisDatabaseWriter->sanitizeQuery($query);
@@ -391,9 +395,9 @@ if (isset($_POST["btnSubmit"])) {
                   method = "post"
                   >
 
-                <input type="hidden" id="hidTrailsId" name="hidTrailsId"
-                       value ="<?php print $pmkTrailsId; ?>"
-
+                <input type="hidden" id="hidCourseId" name="hidCourseId"
+                       value ="<?php print $pmkCourseId; ?>">
+                       
                        <fieldset  class="listbox <?php if ($trailERROR) print ' mistake'; ?>">
                     <p>
                     <legend>Trail Name</legend>
@@ -419,95 +423,60 @@ if (isset($_POST["btnSubmit"])) {
                     </p>
                 </fieldset>
 
-                <fieldset class = "distance">
-
-
-                    <p>
-                        <label class = "required" for = "txtDistance">Total Distance:</label>
-
-                        <input 
-                        <?php if ($distanceERROR) print 'class="mistake"'; ?>
-                            id = "txtDistance"     
-                            maxlength = "45"
-                            name = "txtDistance"
-                            onfocus = "this.select()"
-                            placeholder = ""
-                            tabindex = "120"
-                            type = "text"
-                            value = "<?php print $fldTotalDistance; ?>"
-                            >
-
-                    </p>     
-                </fieldset> 
-
-                <fieldset class = "time">
-
-
-                    <p>
-                        <label class = "required" for = "txtTime">Hiking Time:</label>
-
-                        <input 
-                        <?php if ($timeERROR) print 'class="mistake"'; ?>
-                            id = "txtTime"     
-                            maxlength = "45"
-                            name = "txtTime"
-                            onfocus = "this.select()"
-                            placeholder = "HH:MM:SS"
-                            tabindex = "120"
-                            type = "text"
-                            value = "<?php print $fldHikingTime; ?>"
-                            >
-
-                    </p>     
-                </fieldset> 
-
-                <fieldset class = "distance">
-
-
-                    <p>
-                        <label class = "required" for = "txtVerticalRise">Vertical Rise:</label>
-
-                        <input 
-                        <?php if ($verticalRiseERROR) print 'class="mistake"'; ?>
-                            id = "txtVerticalRise"     
-                            maxlength = "45"
-                            name = "txtVerticalRise"
-                            onfocus = "this.select()"
-                            placeholder = ""
-                            tabindex = "120"
-                            type = "text"
-                            value = "<?php print $fldVerticalRise; ?>"
-                            >
-
-                    </p>     
-                </fieldset> 
-
-                <fieldset class="radio <?php if ($ratingERROR) print ' mistake'; ?>">
-                    <legend>Trail Rating:</legend>
+                <fieldset class="radio <?php if ($classStandingERROR) print ' mistake'; ?>">
+                    <legend>Class Standing (when you took the course):</legend>
                     <p>    
-                        <label class="radio-field"><input type="radio" id="radRatingEasy" name="radRating" value="Easy" tabindex="572" 
-                                                          <?php if ($fldRating == "Easy") echo ' checked="checked" '; ?>>
+                        <label class="radio-field"><input type="radio" id="radClassStandingFreshman" name="radClassStanding" value="Freshman" tabindex="572" 
+                                                          <?php if ($fldClassStanding == "Freshman") echo ' checked="checked" '; ?>>
+                            Freshman</label>
+                    </p>
+                    <p>
+                        <label class="radio-field"><input type="radio" id="radClassStandingSophomore" name="radClassStanding" value="Sophomore" tabindex="574" 
+                                                          <?php if ($fldRating == "Sophomore") echo ' checked="checked" '; ?>>
+                            Sophomore</label>
+                    </p>
+
+                    <p>
+                        <label class="radio-field"><input type="radio" id="radClassStandingJunior" name="radClassStanding" value="Junior" tabindex="574" 
+                                                          <?php if ($fldRating == "Junior") echo ' checked="checked" '; ?>>
+                            Junior </label>
+                    </p>
+
+                    <p>
+                        <label class="radio-field"><input type="radio" id="radClassStandingSenior" name="radClassStanding" value="Senior" tabindex="574" 
+                                                          <?php if ($fldRating == "Senior") echo ' checked="checked" '; ?>>
+                            Senior </label>
+                    </p>
+                </fieldset>
+
+                
+                 <fieldset class="radio <?php if ($fldDifficultyLevel) print ' mistake'; ?>">
+                    <legend>Difficulty level of course:</legend>
+                    <p>    
+                        <label class="radio-field"><input type="radio" id="radDifficultyLevelEasy" name="radDifficultyLevel" value="Easy" tabindex="572" 
+                                                          <?php if ($fldClassStanding == "Easy") echo ' checked="checked" '; ?>>
                             Easy</label>
                     </p>
                     <p>
-                        <label class="radio-field"><input type="radio" id="radRatingModerate" name="radRating" value="Moderate" tabindex="574" 
+                        <label class="radio-field"><input type="radio" id="radDifficultyLevelModerate" name="radDifficultyLevel" value="Moderate" tabindex="574" 
                                                           <?php if ($fldRating == "Moderate") echo ' checked="checked" '; ?>>
                             Moderate</label>
                     </p>
 
                     <p>
-                        <label class="radio-field"><input type="radio" id="radRatingModeratelyStrenuous" name="radRating" value="Moderately Strenuous" tabindex="574" 
-                                                          <?php if ($fldRating == "Moderately Strenuous") echo ' checked="checked" '; ?>>
-                            Moderately Strenuous </label>
+                        <label class="radio-field"><input type="radio" id="radDifficultyLevelHard" name="radDifficultyLevel" value="Hard" tabindex="574" 
+                                                          <?php if ($fldRating == "Hard") echo ' checked="checked" '; ?>>
+                            Hard </label>
                     </p>
 
                     <p>
-                        <label class="radio-field"><input type="radio" id="radRatingStrenuous" name="radRating" value="Strenuous" tabindex="574" 
-                                                          <?php if ($fldRating == "Strenuous") echo ' checked="checked" '; ?>>
-                            Strenuous </label>
+                        <label class="radio-field"><input type="radio" id="radDifficultyLevelVeryHard" name="radDifficultyLevel" value="VeryHard" tabindex="574" 
+                                                          <?php if ($fldRating == "VeryHard") echo ' checked="checked" '; ?>>
+                            Very Hard </label>
                     </p>
                 </fieldset>
-
+                
+                
                 <fieldset class="checkbox <?php if ($activityERROR) print ' mistake'; ?>">
                     <legend>Check the boxes that apply to this hike:</legend>
 
@@ -564,7 +533,11 @@ if (isset($_POST["btnSubmit"])) {
                             type="checkbox"
                             value="Views"> Views</label>
                 </fieldset>
+                 
+            
+               
 
+                
                 <fieldset class="buttons">
                     <legend></legend>
                     <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Register" >
