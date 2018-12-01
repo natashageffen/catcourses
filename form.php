@@ -55,7 +55,7 @@ $fldEmail = "";
 if (isset($_GET["id"])) {
     $pmkTrailsId = (int) htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
 
-    $query = 'SELECT pmkCourseId, fldSubject, fldNumber, fldTitle, fldClassStanding, fldDifficultyLevel, fldTag, fldMajor, fldSkills, fldComments ';
+    $query = 'SELECT pmkCourseId, Subj, fldNumber, fldTitle, fldClassStanding, fldDifficultyLevel, fldTag, fldMajor, fldSkills, fldComments ';
     $query .= 'FROM tblCourses WHERE pmkCourseId = ?';
 
 
@@ -75,7 +75,7 @@ if (isset($_GET["id"])) {
     print "</pre>";
 
 
-    $fldSubject = $courses[0]["fldSubject"];
+    $Subj = $courses[0]["Subj"];
     $fldNumber = $courses[0]["fldNumber"];
     $fldTitle = $courses[0]["fldTitle"];
     $fldClassStanding = $courses[0]["fldClassStanding"];
@@ -145,7 +145,7 @@ if (isset($_POST["btnSubmit"])) {
         $update = true;
     }
 
-    $fldSubject = htmlentities($_POST["lstSubjects"], ENT_QUOTES, "UTF-8");
+    $Subj = htmlentities($_POST["lstSubjects"], ENT_QUOTES, "UTF-8");
     $fldnumber = htmlentities($_POST["lstNumbers"], ENT_QUOTES, "UTF-8");
     $fldClassStanding = htmlentities($_POST["radClassStanding"], ENT_QUOTES, "UTF-8");
     $fldDifficultyLevel = htmlentities($_POST["radDifficultyLevel"], ENT_QUOTES, "UTF-8");
@@ -167,10 +167,10 @@ if (isset($_POST["btnSubmit"])) {
 
 
 
-    if ($fldSubject == "") {
+    if ($Subj == "") {
         $errorMsg[] = 'Please select a subject.';
         $subjectERROR = true;
-    } elseif (!verifyAlpha($fldSubject)) {
+    } elseif (!verifyAlpha($Subj)) {
         $errorMsg[] = 'This subject appears to be incorrect.';
         $subjectERROR = true;
     }
@@ -240,7 +240,7 @@ if (isset($_POST["btnSubmit"])) {
         $dataRecord = array();
 
         // assign values to the dataRecord array
-        $dataRecord[] = $fldSubject;
+        $dataRecord[] = $Subj;
         $dataRecord[] = $fldNumber;
         $dataRecord[] = $fldTitle;
         $dataRecord[] = $fldClassStanding;
@@ -413,7 +413,7 @@ if (isset($_POST["btnSubmit"])) {
         if ($Subj == $subject["Subj"])
             print " selected='selected' ";
 
-        print 'value="' . $subject["fldSubject"];
+        print 'value="' . $subject["Subj"];
 
         print '</option>';
     }

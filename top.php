@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>COURSE GURU</title>
+        <title>Course Guru</title>
         <meta charset="utf-8">
         <meta name="author" content="Natasha Geffen">
         <meta name="description" content="A site for UVM students who want to learn more about courses offered">
