@@ -28,7 +28,7 @@ if (DEBUG) {
 ?>
 <fieldset class = "indexbox">
     <?php
-print '<h2 class="alternateRows">Hiking Trails</h2>';
+print '<h2 class="alternateRows"></h2>';
 
 if (is_array($records)) {
     foreach ($records as $record) {

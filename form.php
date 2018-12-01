@@ -38,7 +38,7 @@ print PHP_EOL . '<!-- SECTION: 1b form variables -->' . PHP_EOL;
 
 
 $pmkCourseId = -1;
-$fldSubject = 0;
+$Subj = 0;
 $fldNumber = 0;
 $fldTitle = 0;
 $fldClassStanding = 0;
@@ -65,25 +65,25 @@ if (isset($_GET["id"])) {
 
     if ($thisDatabaseReader->querySecurityOk($query, 1)) {
         $query = $thisDatabaseReader->sanitizeQuery($query);
-        $course = $thisDatabaseReader->select($query, $data);
+        $courses = $thisDatabaseReader->select($query, $data);
     }
 
 
 
     print "<p>course array:<pre>";
-    print_r($course);
+    print_r($courses);
     print "</pre>";
 
 
-    $fldSubject = $course[0]["fldSubject"];
-    $fldNumber = $course[0]["fldNumber"];
-    $fldTitle = $course[0]["fldTitle"];
-    $fldClassStanding = $course[0]["fldClassStanding"];
-    $fldDifficultyLevel = $course[0]["fldDifficultyLevel"];
-    $fldTag = $course[0]["fldTag"];
-    $fldMajor = $course[0]["fldMajor"];
-    $fldSkills = $course[0]["fldSkills"];
-    $fldComments = $course[0]["fldComments"];
+    $fldSubject = $courses[0]["fldSubject"];
+    $fldNumber = $courses[0]["fldNumber"];
+    $fldTitle = $courses[0]["fldTitle"];
+    $fldClassStanding = $courses[0]["fldClassStanding"];
+    $fldDifficultyLevel = $courses[0]["fldDifficultyLevel"];
+    $fldTag = $courses[0]["fldTag"];
+    $fldMajor = $courses[0]["fldMajor"];
+    $fldSkills = $courses[0]["fldSkills"];
+    $fldComments = $courses[0]["fldComments"];
 }
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^% 
@@ -153,7 +153,7 @@ if (isset($_POST["btnSubmit"])) {
     $fldMajor = htmlentities($_POST["txtMajors"], ENT_QUOTES, "UTF-8");
     $fldSkills = htmlentities($_POST["txtSkills"], ENT_QUOTES, "UTF-8");
     $fldComments = htmlentities($_POST["txtComments"], ENT_QUOTES, "UTF-8");
-   
+
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
     print PHP_EOL . '<!-- SECTION: 2c Validation -->' . PHP_EOL;
@@ -165,7 +165,7 @@ if (isset($_POST["btnSubmit"])) {
     // will be in the order they appear. errorMsg will be displayed on the form
     // see section 3b. The error flag ($emailERROR) will be used in section 3c.
 
- 
+
 
     if ($fldSubject == "") {
         $errorMsg[] = 'Please select a subject.';
@@ -187,13 +187,13 @@ if (isset($_POST["btnSubmit"])) {
     if ($fldTitle == "") {
         $errorMsg[] = 'Please select a title.';
         $titleERROR = true;
-    } 
-    
+    }
+
     if ($_POST ['radClassStanding'] == -1) {
         $errorMsg[] = 'Please select a class standing.';
         $classStandingERROR = true;
-    } 
-    
+    }
+
     if ($_POST ['radDifficultyLevel'] == -1) {
         $errorMsg[] = 'Please select a difficulty level.';
         $difficultyLevelERROR = true;
@@ -201,11 +201,11 @@ if (isset($_POST["btnSubmit"])) {
         $errorMsg[] = 'This difficulty level appears to be incorrect.';
         $difficultyLevelERROR = true;
     }
-    
+
     if ($_POST ['chkTags'] == "") {
         $errorMsg[] = 'Please select a tag.';
         $tagERROR = true;
-    } 
+    }
 
     if ($fldMajor == "") {
         $errorMsg[] = 'Please write your major.';
@@ -214,9 +214,9 @@ if (isset($_POST["btnSubmit"])) {
         $errorMsg[] = 'This major appears to be incorrect.';
         $majorERROR = true;
     }
-    
 
-   
+
+
 
 
 
@@ -249,7 +249,7 @@ if (isset($_POST["btnSubmit"])) {
         $dataRecord[] = $fldMajor;
         $dataRecord[] = $fldSkills;
         $dataRecord[] = $fldComments;
-              
+
 
         print_r($dataRecord);
 
@@ -375,314 +375,309 @@ if (isset($_POST["btnSubmit"])) {
         //####################################
         //
         print PHP_EOL . '<!-- SECTION 3c html Form -->' . PHP_EOL;
+        ?> 
+        <form action = "<?php print PHP_SELF; ?>"
+              id = "frmRegister"
+              method = "post"
+              >
+
+            <fieldset class="listbox <?php if ($subjectERROR) print ' mistake'; ?>">
+
+    <?php
+    $query = "SELECT Subj";
+    $query .= "FROM tblSections ";
+    $query .= "ORDER BY  Subj";
 
 
-//    $query = "SELECT pmkTrailsId, fldTrailName ";
-//    $query .= "FROM tblTrails ";
-//    $query .= "ORDER BY  pmkTrailsId";
-//
-//
-//    // Step Three: run your query being sure to implement security
-//    if ($thisDatabaseReader->querySecurityOk($query, 0, 1)) {
-//        $query = $thisDatabaseReader->sanitizeQuery($query);
-//        $hikers = $thisDatabaseReader->select($query);
-//    }
-
-
-        if ($isAdmin == true) {
-            ?> 
-            <form action = "<?php print PHP_SELF; ?>"
-                  id = "frmRegister"
-                  method = "post"
-                  >
-
-                <input type="hidden" id="hidCourseId" name="hidCourseId"
-                       value ="<?php print $pmkCourseId; ?>">
-                       
-                       <fieldset  class="listbox <?php if ($trailERROR) print ' mistake'; ?>">
-                    <p>
-                    <legend>Trail Name</legend>
-                    <select id="lstTrails" 
-                            name="lstTrails" 
-                            tabindex="520" >
-                        <option <?php if ($fldTrailName == "Camel's Hump") print " selected "; ?>
-                            value="Camel's Hump">Camel's Hump</option>
-
-                        <option <?php if ($fldTrailName == "Snake Mountain") print " selected "; ?>
-                            value="Snake Mountain">Snake Mountain</option>
-
-                        <option <?php if ($fldTrailName == "Prospect Rock (Manchester)") print " selected "; ?>
-                            value="Prospect Rock (Manchester)">Prospect Rock (Manchester)</option>
-
-                        <option <?php if ($fldTrailName == "Skylight Pond") print " selected "; ?>
-                            value="Skylight Pond">Skylight Pond</option>
-
-                        <option <?php if ($fldTrailName == "Mount Pisgah") print " selected "; ?>
-                            value="Mount Pisgah">Mount Pisgah</option>
-
-                    </select>
-                    </p>
-                </fieldset>
-
-                <fieldset class="radio <?php if ($classStandingERROR) print ' mistake'; ?>">
-                    <legend>Class Standing (when you took the course):</legend>
-                    <p>    
-                        <label class="radio-field"><input type="radio" id="radClassStandingFreshman" name="radClassStanding" value="Freshman" tabindex="572" 
-                                                          <?php if ($fldClassStanding == "Freshman") echo ' checked="checked" '; ?>>
-                            Freshman</label>
-                    </p>
-                    <p>
-                        <label class="radio-field"><input type="radio" id="radClassStandingSophomore" name="radClassStanding" value="Sophomore" tabindex="574" 
-                                                          <?php if ($fldClassStanding == "Sophomore") echo ' checked="checked" '; ?>>
-                            Sophomore</label>
-                    </p>
-
-                    <p>
-                        <label class="radio-field"><input type="radio" id="radClassStandingJunior" name="radClassStanding" value="Junior" tabindex="574" 
-                                                          <?php if ($fldClassStanding == "Junior") echo ' checked="checked" '; ?>>
-                            Junior </label>
-                    </p>
-
-                    <p>
-                        <label class="radio-field"><input type="radio" id="radClassStandingSenior" name="radClassStanding" value="Senior" tabindex="574" 
-                                                          <?php if ($fldClassStanding == "Senior") echo ' checked="checked" '; ?>>
-                            Senior </label>
-                    </p>
-                </fieldset>
-
-                
-                 <fieldset class="radio <?php if ($fldDifficultyLevel) print ' mistake'; ?>">
-                    <legend>Difficulty level of course:</legend>
-                    <p>    
-                        <label class="radio-field"><input type="radio" id="radDifficultyLevelEasy" name="radDifficultyLevel" value="Easy" tabindex="572" 
-                                                          <?php if ($fldDifficultyLevel == "Easy") echo ' checked="checked" '; ?>>
-                            Easy</label>
-                    </p>
-                    <p>
-                        <label class="radio-field"><input type="radio" id="radDifficultyLevelModerate" name="radDifficultyLevel" value="Moderate" tabindex="574" 
-                                                          <?php if ($fldDifficultyLevel == "Moderate") echo ' checked="checked" '; ?>>
-                            Moderate</label>
-                    </p>
-
-                    <p>
-                        <label class="radio-field"><input type="radio" id="radDifficultyLevelHard" name="radDifficultyLevel" value="Hard" tabindex="574" 
-                                                          <?php if ($fldDifficultyLevel == "Hard") echo ' checked="checked" '; ?>>
-                            Hard </label>
-                    </p>
-
-                    <p>
-                        <label class="radio-field"><input type="radio" id="radDifficultyLevelVeryHard" name="radDifficultyLevel" value="VeryHard" tabindex="574" 
-                                                          <?php if ($fldDifficultyLevel == "VeryHard") echo ' checked="checked" '; ?>>
-                            Very Hard </label>
-                    </p>
-                </fieldset>
-                
-                
-                <fieldset class="checkbox <?php if ($tagERROR) print ' mistake'; ?>">
-                    <legend>Check the boxes that apply to this course:</legend>
-
-                    <p>
-                        <label class="check-field">
-                            <input <?php if ($fldTag == "Paper Heavy") print " checked "; ?>
-                                id="chkTagPaperHeavy"
-                                name="chkTags"
-                                tabindex="420"
-                                type="checkbox"
-                                value="Paper Heavy">Paper Heavy</label>
-                    </p>
-                    
-                    <p>
-                        <label class="check-field">
-                            <input <?php if ($fldTag == "Reading Heavy") print " unchecked "; ?>
-                                id="chkTagReadingHeavy"
-                                name="chkTags"
-                                tabindex="420"
-                                type="checkbox"
-                                value="Reading Heavy">Reading Heavy</label>
-                    </p>
-                    
-                    <p>
-                        <label class="check-field">
-                            <input <?php if ($fldTag == "Test Heavy") print " unchecked "; ?>
-                                id="chkTagTestHeavy"
-                                name="chkTags"
-                                tabindex="420"
-                                type="checkbox"
-                                value="Test Heavy">Test Heavy</label>
-                    </p>
-                    
-                    <p>
-                        <label class="check-field">
-                            <input <?php if ($fldTag == "Pop Quizzes") print " unchecked "; ?>
-                                id="chkTagPopQuizzes"
-                                name="chkTags"
-                                tabindex="420"
-                                type="checkbox"
-                                value="Pop Quizzes">Pop Quizzes</label>
-                    </p>
-                    
-                    <p>
-                        <label class="check-field">
-                            <input <?php if ($fldTag == "Group Projects") print " unchecked "; ?>
-                                id="chkTagGroupProjects"
-                                name="chkTags"
-                                tabindex="420"
-                                type="checkbox"
-                                value="Group Projects">Group Projects</label>
-                    </p>
-                    
-                    <p>
-                        <label class="check-field">
-                            <input <?php if ($fldTag == "Participation Matters") print " unchecked "; ?>
-                                id="chkTagParticipationMatters"
-                                name="chkTags"
-                                tabindex="420"
-                                type="checkbox"
-                                value="Participation Matters">Participation Matters</label>
-                    </p>
-                    
-                    
-                    <p>
-                        <label class="check-field">
-                            <input <?php if ($fldTag == "Lots of Homework") print " unchecked "; ?>
-                                id="chkTagLotsofHomework"
-                                name="chkTags"
-                                tabindex="420"
-                                type="checkbox"
-                                value="Lots of Homework">Lots of Homework</label>
-                    </p>
-                    
-                    <p>
-                        <label class="check-field">
-                            <input <?php if ($fldTag == "Mandatory Attendance") print " unchecked "; ?>
-                                id="chkTagMandatoryAttendance"
-                                name="chkTags"
-                                tabindex="420"
-                                type="checkbox"
-                                value="Mandatory Attendance">Mandatory Attendance</label>
-                    </p>
-                    
-                    <p>
-                        <label class="check-field">
-                            <input <?php if ($fldTag == "Textbook Use") print " unchecked "; ?>
-                                id="chkTagTextbookUse"
-                                name="chkTags"
-                                tabindex="420"
-                                type="checkbox"
-                                value="Textbook Use">Textbook Use</label>
-                    </p>
-                    
-                    
-                
-                </fieldset>
-                 
-            
-               
-                <fieldset class = "major">
-
-
-                    <p>
-                        <label class = "required" for = "txtMajor">Your major:</label>
-
-                        <input 
-                        <?php if ($majorERROR) print 'class="mistake"'; ?>
-                            id = "txtMajor"     
-                            maxlength = "45"
-                            name = "txtMajor"
-                            onfocus = "this.select()"
-                            placeholder = ""
-                            tabindex = "120"
-                            type = "text"
-                            value = "<?php print $fldMajor; ?>"
-                            >
-
-                    </p>     
-                </fieldset> 
-                
-                
-                  <fieldset class = "skills">
-
-
-                    <p>
-                        <label>Skills you learned in this course: (optional)</label>
-
-                        <input 
-                        
-                            id = "txtSkills"     
-                            maxlength = "90"
-                            name = "txtSkills"
-                            onfocus = "this.select()"
-                            placeholder = ""
-                            tabindex = "120"
-                            type = "text"
-                            value = "<?php print $fldSkills; ?>"
-                            >
-
-                    </p>     
-                </fieldset> 
-                
-                
-                <fieldset class = "comments">
-
-
-                    <p>
-                        <label>Additional Comments: (optional)</label>
-
-                        <input 
-                        
-                            id = "txtComments"     
-                            maxlength = "90"
-                            name = "txtComments"
-                            onfocus = "this.select()"
-                            placeholder = ""
-                            tabindex = "120"
-                            type = "text"
-                            value = "<?php print $fldComments; ?>"
-                            >
-
-                    </p>     
-                </fieldset> 
-                
-                
-                <fieldset class = "comments">
-
-
-                    <p>
-                      
-                        <label>Email address: (Optional)</label>
-
-                        <input 
-                        
-                            id = "txtEmail"     
-                            maxlength = "90"
-                            name = "txtEmail"
-                            onfocus = "this.select()"
-                            placeholder = "youremail@uvm.edu"
-                            tabindex = "120"
-                            type = "text"
-                            value = "<?php print $fldEmail; ?>"
-                            >
-
-                    </p>     
-                </fieldset>
-                
-                
-                <fieldset class="buttons">
-                    <legend></legend>
-                    <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Register" >
-                </fieldset> <!-- ends buttons -->
-            </form>     
-
-            <?php
-        }
-        else {
-            print '<p>You are not authorized to see this page.</p>';
-        }
+    // Step Three: run your query being sure to implement security
+    if ($thisDatabaseReader->querySecurityOk($query, 0, 1)) {
+        $query = $thisDatabaseReader->sanitizeQuery($query);
+        $subjects = $thisDatabaseReader->select($query);
     }
-    ?>
+
+
+
+    print '<label for="lstSubjects"';
+    if ($subjectERROR) {
+        print ' class = "mistake"';
+    }
+    print '>Subject: ';
+    print '<select id="lstSubjects" ';
+    print '        name="lstSubjects"';
+    print '        tabindex="300" >';
+
+
+    foreach ($subjects as $subject) {
+
+        print '<option ';
+        if ($Subj == $subject["Subj"])
+            print " selected='selected' ";
+
+        print 'value="' . $subject["fldSubject"];
+
+        print '</option>';
+    }
+
+    print '</select></label>';
+    ?>    
+
+            </fieldset>
+
+            <fieldset class="radio <?php if ($classStandingERROR) print ' mistake'; ?>">
+                <legend>Class Standing (when you took the course):</legend>
+                <p>    
+                    <label class="radio-field"><input type="radio" id="radClassStandingFreshman" name="radClassStanding" value="Freshman" tabindex="572" 
+    <?php if ($fldClassStanding == "Freshman") echo ' checked="checked" '; ?>>
+                        Freshman</label>
+                </p>
+                <p>
+                    <label class="radio-field"><input type="radio" id="radClassStandingSophomore" name="radClassStanding" value="Sophomore" tabindex="574" 
+    <?php if ($fldClassStanding == "Sophomore") echo ' checked="checked" '; ?>>
+                        Sophomore</label>
+                </p>
+
+                <p>
+                    <label class="radio-field"><input type="radio" id="radClassStandingJunior" name="radClassStanding" value="Junior" tabindex="574" 
+                                                      <?php if ($fldClassStanding == "Junior") echo ' checked="checked" '; ?>>
+                        Junior </label>
+                </p>
+
+                <p>
+                    <label class="radio-field"><input type="radio" id="radClassStandingSenior" name="radClassStanding" value="Senior" tabindex="574" 
+                                                      <?php if ($fldClassStanding == "Senior") echo ' checked="checked" '; ?>>
+                        Senior </label>
+                </p>
+            </fieldset>
+
+
+            <fieldset class="radio <?php if ($fldDifficultyLevel) print ' mistake'; ?>">
+                <legend>Difficulty level of course:</legend>
+                <p>    
+                    <label class="radio-field"><input type="radio" id="radDifficultyLevelEasy" name="radDifficultyLevel" value="Easy" tabindex="572" 
+    <?php if ($fldDifficultyLevel == "Easy") echo ' checked="checked" '; ?>>
+                        Easy</label>
+                </p>
+                <p>
+                    <label class="radio-field"><input type="radio" id="radDifficultyLevelModerate" name="radDifficultyLevel" value="Moderate" tabindex="574" 
+    <?php if ($fldDifficultyLevel == "Moderate") echo ' checked="checked" '; ?>>
+                        Moderate</label>
+                </p>
+
+                <p>
+                    <label class="radio-field"><input type="radio" id="radDifficultyLevelHard" name="radDifficultyLevel" value="Hard" tabindex="574" 
+                                                      <?php if ($fldDifficultyLevel == "Hard") echo ' checked="checked" '; ?>>
+                        Hard </label>
+                </p>
+
+                <p>
+                    <label class="radio-field"><input type="radio" id="radDifficultyLevelVeryHard" name="radDifficultyLevel" value="VeryHard" tabindex="574" 
+                                                      <?php if ($fldDifficultyLevel == "VeryHard") echo ' checked="checked" '; ?>>
+                        Very Hard </label>
+                </p>
+            </fieldset>
+
+
+            <fieldset class="checkbox <?php if ($tagERROR) print ' mistake'; ?>">
+                <legend>Check the boxes that apply to this course:</legend>
+
+                <p>
+                    <label class="check-field">
+                        <input <?php if ($fldTag == "Paper Heavy") print " checked "; ?>
+                            id="chkTagPaperHeavy"
+                            name="chkTags"
+                            tabindex="420"
+                            type="checkbox"
+                            value="Paper Heavy">Paper Heavy</label>
+                </p>
+
+                <p>
+                    <label class="check-field">
+                        <input <?php if ($fldTag == "Reading Heavy") print " unchecked "; ?>
+                            id="chkTagReadingHeavy"
+                            name="chkTags"
+                            tabindex="420"
+                            type="checkbox"
+                            value="Reading Heavy">Reading Heavy</label>
+                </p>
+
+                <p>
+                    <label class="check-field">
+                        <input <?php if ($fldTag == "Test Heavy") print " unchecked "; ?>
+                            id="chkTagTestHeavy"
+                            name="chkTags"
+                            tabindex="420"
+                            type="checkbox"
+                            value="Test Heavy">Test Heavy</label>
+                </p>
+
+                <p>
+                    <label class="check-field">
+                        <input <?php if ($fldTag == "Pop Quizzes") print " unchecked "; ?>
+                            id="chkTagPopQuizzes"
+                            name="chkTags"
+                            tabindex="420"
+                            type="checkbox"
+                            value="Pop Quizzes">Pop Quizzes</label>
+                </p>
+
+                <p>
+                    <label class="check-field">
+                        <input <?php if ($fldTag == "Group Projects") print " unchecked "; ?>
+                            id="chkTagGroupProjects"
+                            name="chkTags"
+                            tabindex="420"
+                            type="checkbox"
+                            value="Group Projects">Group Projects</label>
+                </p>
+
+                <p>
+                    <label class="check-field">
+                        <input <?php if ($fldTag == "Participation Matters") print " unchecked "; ?>
+                            id="chkTagParticipationMatters"
+                            name="chkTags"
+                            tabindex="420"
+                            type="checkbox"
+                            value="Participation Matters">Participation Matters</label>
+                </p>
+
+
+                <p>
+                    <label class="check-field">
+                        <input <?php if ($fldTag == "Lots of Homework") print " unchecked "; ?>
+                            id="chkTagLotsofHomework"
+                            name="chkTags"
+                            tabindex="420"
+                            type="checkbox"
+                            value="Lots of Homework">Lots of Homework</label>
+                </p>
+
+                <p>
+                    <label class="check-field">
+                        <input <?php if ($fldTag == "Mandatory Attendance") print " unchecked "; ?>
+                            id="chkTagMandatoryAttendance"
+                            name="chkTags"
+                            tabindex="420"
+                            type="checkbox"
+                            value="Mandatory Attendance">Mandatory Attendance</label>
+                </p>
+
+                <p>
+                    <label class="check-field">
+                        <input <?php if ($fldTag == "Textbook Use") print " unchecked "; ?>
+                            id="chkTagTextbookUse"
+                            name="chkTags"
+                            tabindex="420"
+                            type="checkbox"
+                            value="Textbook Use">Textbook Use</label>
+                </p>
+
+
+
+            </fieldset>
+
+
+
+            <fieldset class = "major">
+
+
+                <p>
+                    <label class = "required" for = "txtMajor">Your major:</label>
+
+                    <input 
+    <?php if ($majorERROR) print 'class="mistake"'; ?>
+                        id = "txtMajor"     
+                        maxlength = "45"
+                        name = "txtMajor"
+                        onfocus = "this.select()"
+                        placeholder = ""
+                        tabindex = "120"
+                        type = "text"
+                        value = "<?php print $fldMajor; ?>"
+                        >
+
+                </p>     
+            </fieldset> 
+
+
+            <fieldset class = "skills">
+
+
+                <p>
+                    <label>Skills you learned in this course: (optional)</label>
+
+                    <input 
+
+                        id = "txtSkills"     
+                        maxlength = "90"
+                        name = "txtSkills"
+                        onfocus = "this.select()"
+                        placeholder = ""
+                        tabindex = "120"
+                        type = "text"
+                        value = "<?php print $fldSkills; ?>"
+                        >
+
+                </p>     
+            </fieldset> 
+
+
+            <fieldset class = "comments">
+
+
+                <p>
+                    <label>Additional Comments: (optional)</label>
+
+                    <input 
+
+                        id = "txtComments"     
+                        maxlength = "90"
+                        name = "txtComments"
+                        onfocus = "this.select()"
+                        placeholder = ""
+                        tabindex = "120"
+                        type = "text"
+                        value = "<?php print $fldComments; ?>"
+                        >
+
+                </p>     
+            </fieldset> 
+
+
+            <fieldset class = "comments">
+
+
+                <p>
+
+                    <label>Email address: (Optional)</label>
+
+                    <input 
+
+                        id = "txtEmail"     
+                        maxlength = "90"
+                        name = "txtEmail"
+                        onfocus = "this.select()"
+                        placeholder = "youremail@uvm.edu"
+                        tabindex = "120"
+                        type = "text"
+                        value = "<?php print $fldEmail; ?>"
+                        >
+
+                </p>     
+            </fieldset>
+
+
+            <fieldset class="buttons">
+                <legend></legend>
+                <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Register" >
+            </fieldset> <!-- ends buttons -->
+        </form>     
+
+    <?php
+}
+?>
 </fieldset>     
 
 
-<?php include 'footer.php'; ?>
+    <?php include 'footer.php'; ?>
 
 

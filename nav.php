@@ -10,23 +10,39 @@
         }
         print '><a href="index.php">Home</a></li>';
        
-        print '<li ';
-        if ($PATH_PARTS['filename'] == 'form-hiker-trails') {
-            print ' class="activePage" ';
-        }
-        print '><a href="form-hiker-trails.php">Add hiker trails</a></li>';
-
-        print '<li ';
-        if ($PATH_PARTS['filename'] == 'tables') {
-            print ' class="activePage" ';
-        }
-        print '><a href="tables.php">Tables</a></li>';
         
         print '<li ';
-        if ($PATH_PARTS['filename'] == 'form-trails') {
+        if ($PATH_PARTS['filename'] == 'about') {
             print ' class="activePage" ';
         }
-        print '><a href="form-trails.php">Add trails</a></li>';
+        print '><a href="about.php">About</a></li>';
+       
+        
+        
+        print '<li ';
+        if ($PATH_PARTS['filename'] == 'search-courses') {
+            print ' class="activePage" ';
+        }
+        print '><a href="search-courses.php">Search Courses</a></li>';
+
+         print '<li ';
+        if ($PATH_PARTS['filename'] == 'search-professors') {
+            print ' class="activePage" ';
+        }
+        print '><a href="search-professors.php">Search Professors</a></li>';
+
+        
+        print '<li ';
+        if ($PATH_PARTS['filename'] == 'form') {
+            print ' class="activePage" ';
+        }
+        print '><a href="form.php">Review a Course</a></li>';
+        
+        print '<li ';
+        if ($PATH_PARTS['filename'] == 'site-feedback') {
+            print ' class="activePage" ';
+        }
+        print '><a href="site-feedback.php">Site Feedback</a></li>';
 
         ?>
     </ol>

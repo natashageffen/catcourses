@@ -4,7 +4,7 @@
         <img alt="" src="images/camelshump.jpg">
         
     </figure>
-    <h1>VERMONT HIKING</h1>
+    <h1>COURSE GURU</h1>
     
 </header>
 <!-- %%%%%%%%%%%%%%%%%%%%% Ends Page header   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->

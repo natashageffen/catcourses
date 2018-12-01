@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>VT Hiking</title>
+        <title>COURSE GURU</title>
         <meta charset="utf-8">
         <meta name="author" content="Natasha Geffen">
-        <meta name="description" content="A database for VT's trails and hikers">
+        <meta name="description" content="A site for UVM students who want to learn more about courses offered">
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
