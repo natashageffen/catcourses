@@ -25,13 +25,6 @@
         }
         print '><a href="search-courses.php">Search Courses</a></li>';
 
-         print '<li ';
-        if ($PATH_PARTS['filename'] == 'search-professors') {
-            print ' class="activePage" ';
-        }
-        print '><a href="search-professors.php">Search Professors</a></li>';
-
-        
         print '<li ';
         if ($PATH_PARTS['filename'] == 'form') {
             print ' class="activePage" ';

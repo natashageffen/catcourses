@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Course Guru</title>
+        <title>Cat Courses</title>
+        <link rel="shortcut icon" type="image/x-icon" href="images/catamount.png" />
         <meta charset="utf-8">
         <meta name="author" content="Natasha Geffen">
         <meta name="description" content="A site for UVM students who want to learn more about courses offered">
