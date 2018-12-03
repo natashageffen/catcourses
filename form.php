@@ -399,6 +399,7 @@ if (isset($_POST["btnSubmit"])) {
         <form action = "<?php print PHP_SELF; ?>"
               id = "frmRegister"
               method = "post"
+              action="send_form_email.php"
               >
 
             <fieldset class="listbox <?php if ($subjectERROR) print ' mistake'; ?>">
