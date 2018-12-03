@@ -1,7 +1,11 @@
 <?php
-if(isset($_POST['email'])) {
- 
-   
+
+include 'top.php';
+
+if(isset($_POST['helpful'])) {
+ ?>
+    <h1>Thanks for your feedback!</h1>
+   <?php
     $email_to = "ngeffen@uvm.edu";
     $email_subject = "Email from website";
  
@@ -13,38 +17,16 @@ if(isset($_POST['email'])) {
     }
  
 
-    if(!isset($_POST['first_name']) ||
-        !isset($_POST['last_name']) ||
-        !isset($_POST['email']) ||
-        !isset($_POST['telephone']) ||
+    if(!isset($_POST['helpful']) ||
         !isset($_POST['comments'])) {
         died('There appears to be a problem with the form you submitted.');       
     }
  
      
  
-    $first_name = $_POST['first_name']; 
-    $last_name = $_POST['last_name']; 
-    $email_from = $_POST['email']; 
-    $telephone = $_POST['telephone']; 
-    $comments = $_POST['comments']; 
- 
-    $error_message = "";
-    $email_exp = '/^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/';
- 
-  if(!preg_match($email_exp,$email_from)) {
-    $error_message .= 'The Email Address you entered does not appear to be valid.<br />';
-  }
- 
-    $string_exp = "/^[A-Za-z .'-]+$/";
- 
-  if(!preg_match($string_exp,$first_name)) {
-    $error_message .= 'The First Name you entered does not appear to be valid.<br />';
-  }
- 
-  if(!preg_match($string_exp,$last_name)) {
-    $error_message .= 'The Last Name you entered does not appear to be valid.<br />';
-  }
+    $comments = $_POST['helpful']; 
+    $helpful = $_POST['comments']; 
+   
  
   if(strlen($comments) < 1) {
     $error_message .= 'The Comments you entered do not appear to be valid.<br />';
@@ -61,24 +43,18 @@ if(isset($_POST['email'])) {
       $bad = array("content-type","bcc:","to:","cc:","href");
       return str_replace($bad,"",$string);
     }
- 
-     
- 
-    $email_message .= "First Name: ".clean_string($first_name)."\n";
-    $email_message .= "Last Name: ".clean_string($last_name)."\n";
-    $email_message .= "Email: ".clean_string($email_from)."\n";
-    $email_message .= "Telephone: ".clean_string($telephone)."\n";
+
+    $email_message .= "Did you find this site helpful?: ".clean_string($helpful)."\n";
     $email_message .= "Comments: ".clean_string($comments)."\n";
 
 $headers = 'From: '.$email_from."\r\n".
 'Reply-To: '.$email_from."\r\n" .
 'X-Mailer: PHP/' . phpversion();
 @mail($email_to, $email_subject, $email_message, $headers);  
+
+}
+
+include 'footer.php';
+
 ?>
 
-<h1>Thank you for contacting me!</h1>
-<a href="index.php"<p>&larr;Back to Site</p></a>
-<?php
- 
-}
-?>
