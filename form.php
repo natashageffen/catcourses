@@ -40,6 +40,7 @@ print PHP_EOL . '<!-- SECTION: 1b form variables -->' . PHP_EOL;
 $pmkCourseId = -1;
 $Subj = 0;
 $fldNumber = 0;
+$fldInstructor = 0;
 $fldTitle = 0;
 $fldClassStanding = 0;
 $fldDifficultyLevel = 0;
@@ -55,7 +56,7 @@ $fldEmail = "";
 if (isset($_GET["id"])) {
     $pmkTrailsId = (int) htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
 
-    $query = 'SELECT pmkCourseId, Subj, fldNumber, fldTitle, fldClassStanding, fldDifficultyLevel, fldTag, fldMajor, fldSkills, fldComments ';
+    $query = 'SELECT pmkCourseId, fldSubject, fldNumber, fldTitle, fldInstructor, fldClassStanding, fldDifficultyLevel, fldTag, fldMajor, fldSkills, fldComments, fldEmail ';
     $query .= 'FROM tblCourses WHERE pmkCourseId = ?';
 
 
@@ -76,14 +77,17 @@ if (isset($_GET["id"])) {
 
 
     $Subj = $courses[0]["Subj"];
-    $fldNumber = $courses[0]["fldNumber"];
-    $fldTitle = $courses[0]["fldTitle"];
+    $Number = $courses[0]["Number"];
+    $Title = $courses[0]["fldTitle"];
+    $fldInstructor = $courses[0]["fldInstructor"];
     $fldClassStanding = $courses[0]["fldClassStanding"];
     $fldDifficultyLevel = $courses[0]["fldDifficultyLevel"];
     $fldTag = $courses[0]["fldTag"];
     $fldMajor = $courses[0]["fldMajor"];
     $fldSkills = $courses[0]["fldSkills"];
     $fldComments = $courses[0]["fldComments"];
+    $fldTitle = $courses[0]["fldTitle"];
+    $fldEMail = $courses[0]["fldEmail"];
 }
 
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^% 
@@ -96,6 +100,7 @@ print PHP_EOL . '<!-- SECTION: 1c form error flags -->' . PHP_EOL;
 $subjectERROR = false;
 $numberERROR = false;
 $titleERROR = false;
+$instructorERROR = false;
 $classStandingERROR = false;
 $difficultyLevelERROR = false;
 $tagERROR = false;
@@ -147,12 +152,17 @@ if (isset($_POST["btnSubmit"])) {
 
     $Subj = htmlentities($_POST["lstSubjects"], ENT_QUOTES, "UTF-8");
     $fldnumber = htmlentities($_POST["lstNumbers"], ENT_QUOTES, "UTF-8");
+    $fldTitle = htmlentities($_POST["lstTitles"], ENT_QUOTES, "UTF-8");
+    $fldInstructor = htmlentities($_POST["lstInstructors"], ENT_QUOTES, "UTF-8");
     $fldClassStanding = htmlentities($_POST["radClassStanding"], ENT_QUOTES, "UTF-8");
     $fldDifficultyLevel = htmlentities($_POST["radDifficultyLevel"], ENT_QUOTES, "UTF-8");
     $fldTag = htmlentities($_POST["chkTags"], ENT_QUOTES, "UTF-8");
-    $fldMajor = htmlentities($_POST["txtMajors"], ENT_QUOTES, "UTF-8");
+    $fldMajor = htmlentities($_POST["txtMajor"], ENT_QUOTES, "UTF-8");
     $fldSkills = htmlentities($_POST["txtSkills"], ENT_QUOTES, "UTF-8");
     $fldComments = htmlentities($_POST["txtComments"], ENT_QUOTES, "UTF-8");
+    $fldEmail = htmlentities($_POST["txtEmail"], ENT_QUOTES, "UTF-8");
+
+    
 
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
@@ -189,6 +199,13 @@ if (isset($_POST["btnSubmit"])) {
         $titleERROR = true;
     }
 
+    
+    if ($fldInstructor == "") {
+        $errorMsg[] = 'Please select an instructor.';
+        $instructorERROR = true;
+    }
+    
+    
     if ($_POST ['radClassStanding'] == -1) {
         $errorMsg[] = 'Please select a class standing.';
         $classStandingERROR = true;
@@ -243,12 +260,14 @@ if (isset($_POST["btnSubmit"])) {
         $dataRecord[] = $Subj;
         $dataRecord[] = $fldNumber;
         $dataRecord[] = $fldTitle;
+        $dataRecord[] = $fldInstructor;
         $dataRecord[] = $fldClassStanding;
         $dataRecord[] = $fldDifficultyLevel;
         $dataRecord[] = $fldTag;
         $dataRecord[] = $fldMajor;
         $dataRecord[] = $fldSkills;
         $dataRecord[] = $fldComments;
+        $dataRecord[] = $fldEmail;
 
 
         print_r($dataRecord);
@@ -265,10 +284,11 @@ if (isset($_POST["btnSubmit"])) {
             $query .= 'fldMajor = ? ';
             $query .= 'fldSkills = ? ';
             $query .= 'fldComments = ? ';
+            $query .= 'fldEmail = ? ';
         } else {
 
-            $query = "INSERT INTO tblCourses(fldSubject, fldNumber, fldTitle, fldClassStanding, fldDifficultyLevel, fldTag, fldMajor, fldSkills, fldComments) ";
-            $query .= "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $query = "INSERT INTO tblCourses(fldSubject, fldNumber, fldTitle, fldInstructor, fldClassStanding, fldDifficultyLevel, fldTag, fldMajor, fldSkills, fldComments, fldEmail) ";
+            $query .= "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         }
 
 
