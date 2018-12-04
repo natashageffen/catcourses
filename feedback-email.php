@@ -24,8 +24,8 @@ if(isset($_POST['helpful'])) {
  
      
  
-    $comments = $_POST['helpful']; 
-    $helpful = $_POST['comments']; 
+    $helpful = $_POST['helpful']; 
+    $comments = $_POST['comments']; 
    
  
   if(strlen($comments) < 1) {
