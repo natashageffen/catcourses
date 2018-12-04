@@ -39,9 +39,9 @@ print PHP_EOL . '<!-- SECTION: 1b form variables -->' . PHP_EOL;
 
 $pmkCourseId = -1;
 $Subj = 0;
-$fldNumber = 0;
-$fldInstructor = 0;
-$fldTitle = 0;
+$Number = 0;
+$Title = 0;
+$Instructor = 0;
 $fldClassStanding = 0;
 $fldDifficultyLevel = 0;
 $fldTag = 0;
@@ -79,7 +79,7 @@ if (isset($_GET["id"])) {
     $Subj = $courses[0]["Subj"];
     $Number = $courses[0]["Number"];
     $Title = $courses[0]["fldTitle"];
-    $fldInstructor = $courses[0]["fldInstructor"];
+    $Instructor = $courses[0]["fldInstructor"];
     $fldClassStanding = $courses[0]["fldClassStanding"];
     $fldDifficultyLevel = $courses[0]["fldDifficultyLevel"];
     $fldTag = $courses[0]["fldTag"];
@@ -144,16 +144,16 @@ if (isset($_POST["btnSubmit"])) {
     // form. Note it is best to follow the same order as declared in section 1c.
 
 
-    $pmkCourseId = (int) htmlentities($_POST["hidCourseId"], ENT_QUOTES, "UTF-8");
+
 
     if ($pmkCourseId > 0) {
         $update = true;
     }
 
     $Subj = htmlentities($_POST["lstSubjects"], ENT_QUOTES, "UTF-8");
-    $fldnumber = htmlentities($_POST["lstNumbers"], ENT_QUOTES, "UTF-8");
-    $fldTitle = htmlentities($_POST["lstTitles"], ENT_QUOTES, "UTF-8");
-    $fldInstructor = htmlentities($_POST["lstInstructors"], ENT_QUOTES, "UTF-8");
+    $Number = htmlentities($_POST["lstNumbers"], ENT_QUOTES, "UTF-8");
+    $Title = htmlentities($_POST["lstTitles"], ENT_QUOTES, "UTF-8");
+    $Instructor = htmlentities($_POST["lstInstructors"], ENT_QUOTES, "UTF-8");
     $fldClassStanding = htmlentities($_POST["radClassStanding"], ENT_QUOTES, "UTF-8");
     $fldDifficultyLevel = htmlentities($_POST["radDifficultyLevel"], ENT_QUOTES, "UTF-8");
     $fldTag = htmlentities($_POST["chkTags"], ENT_QUOTES, "UTF-8");
@@ -162,7 +162,7 @@ if (isset($_POST["btnSubmit"])) {
     $fldComments = htmlentities($_POST["txtComments"], ENT_QUOTES, "UTF-8");
     $fldEmail = htmlentities($_POST["txtEmail"], ENT_QUOTES, "UTF-8");
 
-    
+
 
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
@@ -186,26 +186,26 @@ if (isset($_POST["btnSubmit"])) {
     }
 
 
-    if ($fldNumber == "") {
+    if ($Number == "") {
         $errorMsg[] = 'Please select a number';
         $numberERROR = true;
-    } elseif (!is_numeric($fldNumber)) {
+    } elseif (!is_numeric($Number)) {
         $errorMsg[] = 'This number appears to be incorrect.';
         $numberERROR = true;
     }
 
-    if ($fldTitle == "") {
+    if ($Title == "") {
         $errorMsg[] = 'Please select a title.';
         $titleERROR = true;
     }
 
-    
-    if ($fldInstructor == "") {
+
+    if ($Instructor == "") {
         $errorMsg[] = 'Please select an instructor.';
         $instructorERROR = true;
     }
-    
-    
+
+
     if ($_POST ['radClassStanding'] == -1) {
         $errorMsg[] = 'Please select a class standing.';
         $classStandingERROR = true;
@@ -258,9 +258,9 @@ if (isset($_POST["btnSubmit"])) {
 
         // assign values to the dataRecord array
         $dataRecord[] = $Subj;
-        $dataRecord[] = $fldNumber;
-        $dataRecord[] = $fldTitle;
-        $dataRecord[] = $fldInstructor;
+        $dataRecord[] = $Number;
+        $dataRecord[] = $Title;
+        $dataRecord[] = $Instructor;
         $dataRecord[] = $fldClassStanding;
         $dataRecord[] = $fldDifficultyLevel;
         $dataRecord[] = $fldTag;
@@ -275,21 +275,21 @@ if (isset($_POST["btnSubmit"])) {
 
         if ($update) {
             $query = 'UPDATE tblCourses SET ';
-            $query .= 'fldSubject = ?, ';
-            $query .= 'fldNumber = ?, ';
-            $query .= 'fldTitle = ?, ';
-            $query .= 'fldClassStanding = ?, ';
-            $query .= 'fldDifficultyLevel = ? ';
-            $query .= 'fldTag = ? ';
-            $query .= 'fldMajor = ? ';
-            $query .= 'fldSkills = ? ';
-            $query .= 'fldComments = ? ';
-            $query .= 'fldEmail = ? ';
         } else {
-
-            $query = "INSERT INTO tblCourses(fldSubject, fldNumber, fldTitle, fldInstructor, fldClassStanding, fldDifficultyLevel, fldTag, fldMajor, fldSkills, fldComments, fldEmail) ";
-            $query .= "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $query = 'INSERT INTO tblCourses SET ';
         }
+        $query .= 'fldSubject = ?, ';
+        $query .= 'fldNumber = ?, ';
+        $query .= 'fldTitle = ?, ';
+        $query .= 'fldInstructor = ?, '; 
+        $query .= 'fldClassStanding = ?, ';
+        $query .= 'fldDifficultyLevel = ?, ';
+        $query .= 'fldTag = ?, ';
+        $query .= 'fldMajor = ?, ';
+        $query .= 'fldSkills = ?, ';
+        $query .= 'fldComments = ?, ';
+        $query .= 'fldEmail = ? ';
+
 
 
 
@@ -310,6 +310,7 @@ if (isset($_POST["btnSubmit"])) {
                 $records = $thisDatabaseWriter->update($query, $dataRecord);
             }
         } else {
+            $thisDatabaseWriter->testSecurityQuery($query, 0);
             if ($thisDatabaseWriter->querySecurityOk($query, 0)) {
                 $query = $thisDatabaseReader->sanitizeQuery($query);
                 $records = $thisDatabaseWriter->insert($query, $dataRecord);
@@ -351,51 +352,51 @@ if (isset($_POST["btnSubmit"])) {
 //
 ?>
 <fieldset class ="formbox">
-    <?php
-    print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
+<?php
+print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
 //
-    ?>       
+?>       
 
 
-    <?php
+<?php
 //####################################
 //
-    print PHP_EOL . '<!-- SECTION 3a  -->' . PHP_EOL;
+print PHP_EOL . '<!-- SECTION 3a  -->' . PHP_EOL;
 // 
 // If its the first time coming to the form or there are errors we are going
 // to display the form.
 
-    if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-        print '<h2>Thank you for providing your information.</h2>';
-        print $message;
-    } else {
+if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
+    print '<h2>Thank you for providing your information.</h2>';
+    print $message;
+} else {
 
-        print '<h2>Tell us about a course.</h2>';
+    print '<h2>Tell us about a course.</h2>';
 
 
-        //####################################
-        //
+    //####################################
+    //
         print PHP_EOL . '<!-- SECTION 3b Error Messages -->' . PHP_EOL;
-        //
-        // display any error messages before we print out the form
+    //
+    // display any error messages before we print out the form
 
-        if ($errorMsg) {
-            print '<div id="errors">' . PHP_EOL;
-            print '<h2>Your form has the following mistakes that need to be fixed.</h2>' . PHP_EOL;
-            print '<ol>' . PHP_EOL;
+    if ($errorMsg) {
+        print '<div id="errors">' . PHP_EOL;
+        print '<h2>Your form has the following mistakes that need to be fixed.</h2>' . PHP_EOL;
+        print '<ol>' . PHP_EOL;
 
-            foreach ($errorMsg as $err) {
-                print '<li>' . $err . '</li>' . PHP_EOL;
-            }
-
-            print '</ol>' . PHP_EOL;
-            print '</div>' . PHP_EOL;
+        foreach ($errorMsg as $err) {
+            print '<li>' . $err . '</li>' . PHP_EOL;
         }
 
-        //####################################
-        //
+        print '</ol>' . PHP_EOL;
+        print '</div>' . PHP_EOL;
+    }
+
+    //####################################
+    //
         print PHP_EOL . '<!-- SECTION 3c html Form -->' . PHP_EOL;
-        ?> 
+    ?> 
         <form action = "<?php print PHP_SELF; ?>"
               id = "frmRegister"
               method = "post"
@@ -416,10 +417,7 @@ if (isset($_POST["btnSubmit"])) {
         $subjects = $thisDatabaseReader->select($query);
     }
 
-    
 
-    print_r ($subjects);
-    
     print '<label for="lstSubjects"';
     if ($subjectERROR) {
         print ' class = "mistake"';
@@ -439,8 +437,8 @@ if (isset($_POST["btnSubmit"])) {
         print 'value="' . $subject["Subj"];
 
         print '">';
-        
-        
+
+
         print $subject["Subj"];
         print '</option>';
     }
@@ -449,6 +447,142 @@ if (isset($_POST["btnSubmit"])) {
     ?>    
 
             </fieldset>
+
+            <fieldset class="listbox <?php if ($numberERROR) print ' mistake'; ?>">
+
+    <?php
+    $query = "SELECT distinct Number ";
+    $query .= "FROM tblSections ";
+    $query .= "ORDER BY  Number";
+
+
+    // Step Three: run your query being sure to implement security
+    if ($thisDatabaseReader->querySecurityOk($query, 0, 1)) {
+        $query = $thisDatabaseReader->sanitizeQuery($query);
+        $nums = $thisDatabaseReader->select($query);
+    }
+
+
+    print '<label for="lstNumbers"';
+    if ($numberERROR) {
+        print ' class = "mistake"';
+    }
+    print '>Course #: ';
+    print '<select id="lstNumbers" ';
+    print '        name="lstNumbers"';
+    print '        tabindex="300" >';
+
+
+    foreach ($nums as $num) {
+
+        print '<option ';
+        if ($Number == $num["Number"])
+            print " selected='selected' ";
+
+        print 'value="' . $num["Number"];
+
+        print '">';
+
+
+        print $num["Number"];
+        print '</option>';
+    }
+
+    print '</select></label>';
+    ?>    
+
+            </fieldset>
+
+            <fieldset class="listbox <?php if ($titleERROR) print ' mistake'; ?>">
+
+    <?php
+    $query = "SELECT distinct Title ";
+    $query .= "FROM tblSections ";
+    $query .= "ORDER BY Title";
+
+
+    // Step Three: run your query being sure to implement security
+    if ($thisDatabaseReader->querySecurityOk($query, 0, 1)) {
+        $query = $thisDatabaseReader->sanitizeQuery($query);
+        $titles = $thisDatabaseReader->select($query);
+    }
+
+
+    print '<label for="lstTitles"';
+    if ($titleERROR) {
+        print ' class = "mistake"';
+    }
+    print '>Course title: ';
+    print '<select id="lstTitles" ';
+    print '        name="lstTitles"';
+    print '        tabindex="300" >';
+
+
+    foreach ($titles as $title) {
+
+        print '<option ';
+        if ($Title == $title["Title"])
+            print " selected='selected' ";
+
+        print 'value="' . $title["Title"];
+
+        print '">';
+
+
+        print $title["Title"];
+        print '</option>';
+    }
+
+    print '</select></label>';
+    ?>    
+
+            </fieldset>
+
+            <fieldset class="listbox <?php if ($instructorERROR) print ' mistake'; ?>">
+
+    <?php
+    $query = "SELECT distinct Instructor ";
+    $query .= "FROM tblSections ";
+    $query .= "ORDER BY Instructor";
+
+
+    // Step Three: run your query being sure to implement security
+    if ($thisDatabaseReader->querySecurityOk($query, 0, 1)) {
+        $query = $thisDatabaseReader->sanitizeQuery($query);
+        $instructors = $thisDatabaseReader->select($query);
+    }
+
+
+    print '<label for="lstInstructors"';
+    if ($instructorERROR) {
+        print ' class = "mistake"';
+    }
+    print '>Instructor: ';
+    print '<select id="lstInstructors" ';
+    print '        name="lstInstructors"';
+    print '        tabindex="300" >';
+
+
+    foreach ($instructors as $instructor) {
+
+        print '<option ';
+        if ($Instructor == $instructor["Instructor"])
+            print " selected='selected' ";
+
+        print 'value="' . $instructor["Instructor"];
+
+        print '">';
+
+
+        print $instructor["Instructor"];
+        print '</option>';
+    }
+
+    print '</select></label>';
+    ?>    
+
+            </fieldset>
+
 
             <fieldset class="radio <?php if ($classStandingERROR) print ' mistake'; ?>">
                 <legend>Class Standing (when you took the course):</legend>
@@ -465,13 +599,13 @@ if (isset($_POST["btnSubmit"])) {
 
                 <p>
                     <label class="radio-field"><input type="radio" id="radClassStandingJunior" name="radClassStanding" value="Junior" tabindex="574" 
-                                                      <?php if ($fldClassStanding == "Junior") echo ' checked="checked" '; ?>>
+    <?php if ($fldClassStanding == "Junior") echo ' checked="checked" '; ?>>
                         Junior </label>
                 </p>
 
                 <p>
                     <label class="radio-field"><input type="radio" id="radClassStandingSenior" name="radClassStanding" value="Senior" tabindex="574" 
-                                                      <?php if ($fldClassStanding == "Senior") echo ' checked="checked" '; ?>>
+    <?php if ($fldClassStanding == "Senior") echo ' checked="checked" '; ?>>
                         Senior </label>
                 </p>
             </fieldset>
@@ -492,13 +626,13 @@ if (isset($_POST["btnSubmit"])) {
 
                 <p>
                     <label class="radio-field"><input type="radio" id="radDifficultyLevelHard" name="radDifficultyLevel" value="Hard" tabindex="574" 
-                                                      <?php if ($fldDifficultyLevel == "Hard") echo ' checked="checked" '; ?>>
+    <?php if ($fldDifficultyLevel == "Hard") echo ' checked="checked" '; ?>>
                         Hard </label>
                 </p>
 
                 <p>
                     <label class="radio-field"><input type="radio" id="radDifficultyLevelVeryHard" name="radDifficultyLevel" value="VeryHard" tabindex="574" 
-                                                      <?php if ($fldDifficultyLevel == "VeryHard") echo ' checked="checked" '; ?>>
+    <?php if ($fldDifficultyLevel == "VeryHard") echo ' checked="checked" '; ?>>
                         Very Hard </label>
                 </p>
             </fieldset>
@@ -705,6 +839,6 @@ if (isset($_POST["btnSubmit"])) {
 </fieldset>     
 
 
-    <?php include 'footer.php'; ?>
+<?php include 'footer.php'; ?>
 
 
