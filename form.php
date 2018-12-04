@@ -405,7 +405,7 @@ if (isset($_POST["btnSubmit"])) {
             <fieldset class="listbox <?php if ($subjectERROR) print ' mistake'; ?>">
 
     <?php
-    $query = "SELECT Subj";
+    $query = "SELECT distinct Subj ";
     $query .= "FROM tblSections ";
     $query .= "ORDER BY  Subj";
 
@@ -416,8 +416,10 @@ if (isset($_POST["btnSubmit"])) {
         $subjects = $thisDatabaseReader->select($query);
     }
 
+    
 
-
+    print_r ($subjects);
+    
     print '<label for="lstSubjects"';
     if ($subjectERROR) {
         print ' class = "mistake"';
@@ -436,6 +438,10 @@ if (isset($_POST["btnSubmit"])) {
 
         print 'value="' . $subject["Subj"];
 
+        print '">';
+        
+        
+        print $subject["Subj"];
         print '</option>';
     }
 
