@@ -291,16 +291,6 @@ if (isset($_POST["btnSubmit"])) {
         $query .= 'fldEmail = ? ';
 
 
-
-
-//      
-//thisDatabaseWriter->testSecurityQuery($query, 0);
-        // print $query;
-        //print_r($dataRecord); 
-
-
-
-
         if ($update) {
             $query .= 'WHERE pmkCourseId = ?';
             $dataRecord[] = $pmkCourseId;
