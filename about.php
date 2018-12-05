@@ -6,19 +6,18 @@
 <head>
     <title>About</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
-    <h1>Dear UVM students,</h1>
+    <fieldset id="about">
+    <h1>About this Site</h1>
     
-    <p>As a student, I know that picking  courses can be stressful. This site was created 
+    <p>As a student, picking  courses can be stressful. This site was created 
     to make life easier for you. With the click of a button, you can search what other students
     have said about UVM courses and instructors. This site also makes it easy to review courses for
-    future students to see. Thanks for visiting this site and let me know what you think!</p>
+    future students to see. Thanks for visiting this site and let us know what you think!</p>
     
-    <p>~Natasha</p>
-    
-    <h2>FAQ</h2>
+   
+    <h1>FAQ</h1>
     
     <h2>Why not just use Rate My Professors?</h2>
     
@@ -37,6 +36,7 @@
     <p>Yes - while you can include your email in your course review, it is completely optional. If you choose to
     put down your email, you will recieve a copy of your course review. </p>
     
+    </fieldset>
     
 </body>
 

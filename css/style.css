@@ -1,0 +1,178 @@
+body {
+  background-image: url("UVM.jpg");
+   background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center; 
+ 
+  font-family: 'Quicksand', sans-serif;
+  background-size: cover;
+  
+}
+
+header h1{
+    display: block;
+
+
+text-align: center;
+
+padding: 14px 16px;
+
+
+float: left;
+
+background-color: #333;
+
+margin-top: 0%;
+
+font-size: x-large;
+
+}
+
+header h1 a{
+    text-decoration: none;
+    color: white;
+    
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  overflow: hidden;
+  background-color: #333;
+ padding-bottom: 10px;
+padding-top: 6px;
+
+}
+
+nav li {
+  float: left;
+}
+
+nav li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+nav li a:hover {
+  background-color: #111;
+}
+
+header h1{
+    display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+#home-searchbutton{
+    display: inline-block;
+    text-decoration: none;
+    background: darkolivegreen;
+    padding: 16px;
+    color: white;
+    border-style: outset;
+    margin: 50px;
+
+}
+
+
+#home-reviewbutton{
+    display: inline-block;
+    text-decoration: none;
+    background: darkolivegreen;
+    padding: 16px;
+    color: white;
+    border-style: outset;
+    margin:50px;
+ 
+}
+
+#home-buttons{
+    justify-content: center;
+
+display: flex;
+}
+
+
+#home-slogan{
+    margin: auto;
+
+margin-top: 200px;
+
+max-width: 70%;
+
+color: white;
+
+font-size: 60px;
+
+text-align: center;
+}
+
+
+#about{
+    margin: auto;
+width: 700px;
+
+display: inline;
+
+max-width: 70%;
+
+background-color: rgba(255, 255, 255, 0.8);
+
+border: none;
+
+
+color: darkolivegreen;
+
+text-align: center;
+
+margin: 50px;
+
+padding: 50px;
+    
+}
+
+
+
+
+#c{
+  font-size: xx-large;  
+}
+
+form{
+    margin: auto;
+    margin: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    float: left;
+    padding: 20px;
+}
+
+label{
+    color: black;
+    margin: 20px;
+}
+
+fieldset{
+    border: none;
+}
+
+
+#form-head{
+    color: white;
+     margin-left: 5%;
+}
+
+
+
+
+footer{
+position: fixed;
+float: right;
+margin-top: 100%;
+color: lightgray;
+}

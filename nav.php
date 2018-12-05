@@ -1,6 +1,6 @@
 <!-- ######################     Main Navigation   ########################## -->
 <nav>
-    <ol>
+    <ul>
         <?php
         // This sets a class for current page so you can style it differently
         
@@ -38,7 +38,7 @@
         print '><a href="site-feedback.php">Site Feedback</a></li>';
 
         ?>
-    </ol>
+    </ul>
 </nav>
 <!-- #################### Ends Main Navigation    ########################## -->
 

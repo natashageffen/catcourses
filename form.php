@@ -20,11 +20,7 @@ print PHP_EOL . '<!-- SECTION: 1a. debugging setup -->' . PHP_EOL;
 
 
 
-<?php
-print '<p>Post Array:</p><pre>';
-print_r($_POST);
-print '</pre>';
-?>
+
 
 
 <?php
@@ -68,9 +64,7 @@ if (isset($_GET["id"])) {
 
 
 
-    print "<p>course array:<pre>";
-    print_r($courses);
-    print "</pre>";
+ 
 
 
     $Subj = $courses[0]["fldSubject"];
@@ -323,7 +317,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
     print $message;
 } else {
 
-    print '<h2>Tell us about a course.</h2>';
+    print '<h2 id="form-head">Tell us about a course.</h2>';
 
 
     //####################################
@@ -630,13 +624,15 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                     <input 
 
                         id = "txtSkills"     
-                        maxlength = "90"
                         name = "txtSkills"
                         onfocus = "this.select()"
                         placeholder = ""
                         tabindex = "120"
                         type = "text"
                         value = "<?php print $fldSkills; ?>"
+                        maxlength="1000" 
+                        cols="25" 
+                        rows="6"
                         >
 
                 </p>     
@@ -652,7 +648,9 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                     <input 
 
                         id = "txtComments"     
-                        maxlength = "90"
+                        maxlength="1000" 
+                        cols="25" 
+                        rows="6"
                         name = "txtComments"
                         onfocus = "this.select()"
                         placeholder = ""
