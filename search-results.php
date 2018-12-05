@@ -1,30 +1,9 @@
 
-<!DOCTYPE>
-<html>
-       <?php include 'top.php'; ?>
-<head>
-    <title>Search results</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link rel="stylesheet" type="text/css" href="style.css"/>
-</head>
-<body>
-<?php
-    $query = $_GET['query']; 
-    // gets value sent over search form
-     
-    $min_length = 3;
-    // you can set minimum length of the query if you want
-     
-    if(strlen($query) >= $min_length){ // if query length is more or equal minimum length then
-         
-        $query = htmlspecialchars($query); 
-        // changes characters used in html to their equivalents, for example: < to &gt;
-         
-        $query = mysql_real_escape_string($query);
-        // makes sure nobody uses SQL injection
-         
-        $raw_results = mysql_query("SELECT * FROM tblSections, tblCourses
-            WHERE (`title` LIKE '%".$query."%') OR (`text` LIKE '%".$query."%')") or die(mysql_error());
+       <?php include 'top.php';
+
+  
+//        $query = 'SELECT * FROM tblCourses';
+//        $query .= 'WHERE `Subj` LIKE 'subject-query' AND `Number` LIKE 'number-query';
              
         // * means that it selects all fields, you can also write: `id`, `title`, `text`
         // articles is the name of our table
@@ -47,7 +26,7 @@
             echo "No results";
         }
          
-    }
+    
     
 ?>
 </body>

@@ -10,7 +10,15 @@
 </head>
 <body>
     <form action="search-results.php" method="GET">
-        <input type="text" name="query" />
+        <label>Search by Course:</label>
+        <input type="text" name="subject-query" placeholder="Subject"/>
+        <input type="text" name="number-query" placeholder="Course #"/>
+        <input type="submit" value="Search" />
+    </form>
+    
+    <form action="search-results.php" method="GET">
+        <label>Search by Instructor:</label>
+        <input type="text" name="instructor-query" />
         <input type="submit" value="Search" />
     </form>
 </body>
