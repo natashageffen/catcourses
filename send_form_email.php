@@ -3,13 +3,10 @@ if(isset($_POST['txtEmail'])) {
  
     
     $Subj = $_POST["lstSubjects"];
-    $fldnumber = $_POST["lstNumbers"];
-    $fldTitle = $_POST["lstTitles"];
-    $fldInstructor = $_POST["lstInstructors"];
-    $fldClassStanding = $_POST["radClassStanding"];
+    $Number = $_POST["lstNumbers"];
+    $Instructor = $_POST["lstInstructors"];
     $fldDifficultyLevel = $_POST["radDifficultyLevel"];
     $fldTag = $_POST["chkTags"];
-    $fldMajor = $_POST["txtMajor"];
     $fldSkills = $_POST["txtSkills"];
     $fldComments = $_POST["txtComments"];
     $fldEmail = $_POST["txtEmail"];
@@ -36,10 +33,12 @@ if(isset($_POST['txtEmail'])) {
      
  
     $email_message .= "Subject: ".clean_string($Subj)."\n";
-    $email_message .= "Course #: ".clean_string($fldNumber)."\n";
-    $email_message .= "Email: ".clean_string($email_from)."\n";
-    $email_message .= "Telephone: ".clean_string($telephone)."\n";
-    $email_message .= "Comments: ".clean_string($comments)."\n";
+    $email_message .= "Course #: ".clean_string($Number)."\n";
+    $email_message .= "Instructor: ".clean_string($Instructor)."\n";
+    $email_message .= "Difficulty Level: ".clean_string($fldDifficultyLevel)."\n";
+    $email_message .= "Tag: ".clean_string($fldTag)."\n";
+    $email_message .= "Skills Learned: ".clean_string($fldSkills)."\n";
+    $email_message .= "Comments: ".clean_string($fldComments)."\n";
 
 $headers = 'From: Cat Courses' .
 'Reply-To: ngeffen@uvm.edu'."\r\n" .

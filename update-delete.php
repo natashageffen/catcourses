@@ -32,7 +32,7 @@ print '<h2 class="alternateRows">Records</h2>';
 
 if (is_array($records)) {
     foreach ($records as $record) {
-        print '<p>' . $record['pmkCourseId'] . ' ' . $record['Subj'] . ' ' . $record['fldNumber'] . ' ' . $record['fldTitle'] . ' ' . $record['fldClassStanding'] . ' ' . $record['fldDifficultyLevel'] . ' ' . $record['fldTag'] . ' ' . $record['fldMajor'] . ' ' . $record['fldSkills'] . ' ' . $record['fldComments'] . ' ' . $record['fldEmail'] .'</p>';
+        print '<p>' . $record['pmkCourseId'] . ' ' . $record['fldSubject'] . ' ' . $record['fldNumber'] . ' ' . $record['fldInstructor']. ' ' . $record['fldDifficultyLevel'] . ' ' . $record['fldTag'] . ' ' . $record['fldSkills'] . ' ' . $record['fldComments'] . ' ' . $record['fldEmail'] .'</p>';
         if ($isAdmin == true){
         echo '<a href="form.php?id='. $record["pmkCourseId"] . '">EDIT TABLE</a>';
 }
