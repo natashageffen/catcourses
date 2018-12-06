@@ -34,9 +34,9 @@ print PHP_EOL . '<!-- SECTION: 1b form variables -->' . PHP_EOL;
 
 
 $pmkCourseId = -1;
-$Subj = 0;
-$Number = 0;
-$Instructor = 0;
+$Subj = "";
+$Number = "";
+$Instructor = "";
 $fldDifficultyLevel = 0;
 $fldTag = 0;
 $fldSkills = "";
@@ -168,10 +168,10 @@ if (isset($_POST["btnSubmit"])) {
 
 
     if ($Number == "") {
-        $errorMsg[] = 'Please select a number';
+        $errorMsg[] = 'Please select a course number';
         $numberERROR = true;
     } elseif (!is_numeric($Number)) {
-        $errorMsg[] = 'This number appears to be incorrect.';
+        $errorMsg[] = 'This course number appears to be incorrect.';
         $numberERROR = true;
     }
 
@@ -328,7 +328,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
     if ($errorMsg) {
         print '<div id="errors">' . PHP_EOL;
-        print '<h2>Your form has the following mistakes that need to be fixed.</h2>' . PHP_EOL;
+        print '<h2>The following errors that need to be fixed.</h2>' . PHP_EOL;
         print '<ol>' . PHP_EOL;
 
         foreach ($errorMsg as $err) {
@@ -344,7 +344,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
         print PHP_EOL . '<!-- SECTION 3c html Form -->' . PHP_EOL;
     ?> 
         <form action = "<?php print PHP_SELF; ?>"
-              id = "frmRegister"
+              id = "frmCourses"
               method = "post"
               action="send_form_email.php"
               >
@@ -688,7 +688,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
             <fieldset class="buttons">
                 <legend></legend>
-                <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Register" >
+                <input class = "button" id = "btnSubmit" name = "btnSubmit" tabindex = "900" type = "submit" value = "Submit" >
             </fieldset> <!-- ends buttons -->
         </form>     
 
