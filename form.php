@@ -37,8 +37,18 @@ $pmkCourseId = -1;
 $Subj = "";
 $Number = "";
 $Instructor = "";
-$fldDifficultyLevel = 0;
-$fldTag = 0;
+$fldDifficultyLevel = "";
+
+$fldPaperHeavy = true;
+$fldReadingHeavy = false;
+$fldTestHeavy = false;
+$fldPopQuizzes = false;
+$fldGroupProjects = false;
+$fldParticipationMatters = false;
+$fldLotsOfHomework = false;
+$fldMandatoryAttendance = false;        
+$fldTextbookUse = false;
+
 $fldSkills = "";
 $fldComments = "";
 $fldEmail = "";
@@ -49,7 +59,7 @@ $fldEmail = "";
 if (isset($_GET["id"])) {
     $pmkCourseId = (int) htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
 
-    $query = 'SELECT pmkCourseId, fldSubject, fldNumber, fldInstructor, fldDifficultyLevel, fldTag, fldSkills, fldComments, fldEmail ';
+    $query = 'SELECT pmkCourseId, fldSubject, fldNumber, fldInstructor, fldDifficultyLevel, fldPaperHeavy, fldReadingHeavy, fldTestHeavy, fldPopQuizzes, fldGroupProjects, fldParticipationMatters, fldLotsOfHomework, fldMandatoryAttendance, fldTextbookUse , fldSkills, fldComments, fldEmail ';
     $query .= 'FROM tblCourses WHERE pmkCourseId = ?';
 
 
@@ -71,7 +81,15 @@ if (isset($_GET["id"])) {
     $Number = $courses[0]["fldNumber"];
     $Instructor = $courses[0]["fldInstructor"];
     $fldDifficultyLevel = $courses[0]["fldDifficultyLevel"];
-    $fldTag = $courses[0]["fldTag"];
+    $fldPaperHeavy = $courses[0]["fldPaperHeavy"];
+    $fldReadingHeavy = $courses[0] ["fldReadingHeavy"];
+    $fldTestHeavy = $courses[0] ["fldTestHeavy"];
+    $fldPopQuizzes = $courses[0] ["fldPopQuizzes"];
+    $fldGroupProjects = $courses[0] ["fldGroupProjects"];
+    $fldParticipationMatters = $courses[0] ["fldParticipationMatters"];
+    $fldLotsOfHomework = $courses[0] ["fldLotsOfHomework"];
+    $fldMandatoryAttendance = $courses[0] ["fldMandatoryAttendance"];
+    $fldTextbookUse = $courses[0] ["fldTextbookUse"];
     $fldSkills = $courses[0]["fldSkills"];
     $fldComments = $courses[0]["fldComments"];
     $fldTitle = $courses[0]["fldTitle"];
@@ -89,7 +107,7 @@ $subjectERROR = false;
 $numberERROR = false;
 $instructorERROR = false;
 $difficultyLevelERROR = false;
-$tagERROR = false;
+
 
 
 
@@ -138,7 +156,15 @@ if (isset($_POST["btnSubmit"])) {
     $Number = htmlentities($_POST["lstNumbers"], ENT_QUOTES, "UTF-8");
     $Instructor = htmlentities($_POST["lstInstructors"], ENT_QUOTES, "UTF-8");
     $fldDifficultyLevel = htmlentities($_POST["radDifficultyLevel"], ENT_QUOTES, "UTF-8");
-    $fldTag = htmlentities($_POST["chkTags"], ENT_QUOTES, "UTF-8");
+    $fldPaperHeavy = htmlentities($_POST["chkPaperHeavy"], ENT_QUOTES, "UTF-8");
+    $fldReadingHeavy = htmlentities($_POST["chkReadingHeavy"], ENT_QUOTES, "UTF-8");
+    $fldTestHeavy = htmlentities($_POST["chkTestHeavy"], ENT_QUOTES, "UTF-8");
+    $fldPopQuizzes = htmlentities($_POST["chkPopQuizzes"], ENT_QUOTES, "UTF-8");
+    $fldGroupProjects = htmlentities($_POST["chkGroupProjects"], ENT_QUOTES, "UTF-8");
+    $fldParticipationMatters = htmlentities($_POST["chkParticipationMatters"], ENT_QUOTES, "UTF-8");
+    $fldLotsOfHomework = htmlentities($_POST["chkLotsOfHomework"], ENT_QUOTES, "UTF-8");
+    $fldMandatoryAttendance = htmlentities($_POST["chkMandatoryAttendance"], ENT_QUOTES, "UTF-8");
+    $fldTextbookUse = htmlentities($_POST["chkTextbookUse"], ENT_QUOTES, "UTF-8");
     $fldSkills = htmlentities($_POST["txtSkills"], ENT_QUOTES, "UTF-8");
     $fldComments = htmlentities($_POST["txtComments"], ENT_QUOTES, "UTF-8");
     $fldEmail = htmlentities($_POST["txtEmail"], ENT_QUOTES, "UTF-8");
@@ -156,6 +182,11 @@ if (isset($_POST["btnSubmit"])) {
     // will be in the order they appear. errorMsg will be displayed on the form
     // see section 3b. The error flag ($emailERROR) will be used in section 3c.
 
+    ?>
+    
+    <span id="error-message">
+    
+    <?php
 
 
     if ($Subj == "") {
@@ -191,13 +222,13 @@ if (isset($_POST["btnSubmit"])) {
         $difficultyLevelERROR = true;
     }
 
-    if ($_POST ['chkTags'] == "") {
-        $errorMsg[] = 'Please select a tag.';
-        $tagERROR = true;
-    }
 
 
-
+    ?>
+    
+    </span>
+    
+    <?php
 
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //
@@ -223,7 +254,14 @@ if (isset($_POST["btnSubmit"])) {
         $dataRecord[] = $Number;
         $dataRecord[] = $Instructor;
         $dataRecord[] = $fldDifficultyLevel;
-        $dataRecord[] = $fldTag;
+        $dataRecord[] = $fldPaperHeavy;
+        $dataRecord[] = $fldReadingHeavy;
+        $dataRecord[] = $fldTestHeavy;
+        $dataRecord[] = $fldPopQuizzes;
+        $dataRecord[] = $fldParticipationMatters;
+        $dataRecord[] = $fldLotsOfHomework;
+        $dataRecord[] = $fldMandatoryAttendance;
+        $dataRecord[] = $fldTextbookUse;
         $dataRecord[] = $fldSkills;
         $dataRecord[] = $fldComments;
         $dataRecord[] = $fldEmail;
@@ -241,7 +279,15 @@ if (isset($_POST["btnSubmit"])) {
         $query .= 'fldNumber = ?, ';
         $query .= 'fldInstructor = ?, '; 
         $query .= 'fldDifficultyLevel = ?, ';
-        $query .= 'fldTag = ?, ';
+        $query .= 'fldPaperHeavy = ?, ';
+        $query .= 'fldReadingHeavy = ?, ';
+        $query .= 'fldTestHeavy = ?, ';
+        $query .= 'fldPopQuizzes = ?, ';
+        $query .= 'fldGroupProjects = ?, ';
+        $query .= 'fldParticipationMatters = ?, ';
+        $query .= 'fldLotsOfHomework = ?, ';
+        $query .= 'fldMandatoryAttendance = ?, ';
+        $query .= 'fldTextbookUse = ?, ';
         $query .= 'fldSkills = ?, ';
         $query .= 'fldComments = ?, ';
         $query .= 'fldEmail = ? ';
@@ -313,7 +359,7 @@ print PHP_EOL . '<!-- SECTION 3a  -->' . PHP_EOL;
 // to display the form.
 
 if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
-    print '<h2>Thank you for providing your information.</h2>';
+    print '<h2 id="form-head">Thank you for providing your information.</h2>';
     print $message;
 } else {
 
@@ -328,7 +374,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
     if ($errorMsg) {
         print '<div id="errors">' . PHP_EOL;
-        print '<h2>The following errors that need to be fixed.</h2>' . PHP_EOL;
+        print '<h2>The following errors need to be fixed.</h2>' . PHP_EOL;
         print '<ol>' . PHP_EOL;
 
         foreach ($errorMsg as $err) {
@@ -513,12 +559,12 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
             </fieldset>
 
 
-            <fieldset class="checkbox <?php if ($tagERROR) print ' mistake'; ?>">
+            <fieldset class="checkbox">
                 <legend>Check the boxes that apply to this course:</legend>
 
                 <p>
                     <label class="check-field">
-                        <input <?php if ($fldTag == "Paper Heavy") print " checked "; ?>
+                        <input <?php if ($fldPaperHeavy == "Paper Heavy") print " checked "; ?>
                             id="chkTagPaperHeavy"
                             name="chkTags"
                             tabindex="420"
@@ -528,7 +574,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                 <p>
                     <label class="check-field">
-                        <input <?php if ($fldTag == "Reading Heavy") print " unchecked "; ?>
+                        <input <?php if ($fldReadingHeavy == "Reading Heavy") print " unchecked "; ?>
                             id="chkTagReadingHeavy"
                             name="chkTags"
                             tabindex="420"
@@ -538,7 +584,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                 <p>
                     <label class="check-field">
-                        <input <?php if ($fldTag == "Test Heavy") print " unchecked "; ?>
+                        <input <?php if ($fldTestHeavy == "Test Heavy") print " unchecked "; ?>
                             id="chkTagTestHeavy"
                             name="chkTags"
                             tabindex="420"
@@ -548,7 +594,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                 <p>
                     <label class="check-field">
-                        <input <?php if ($fldTag == "Pop Quizzes") print " unchecked "; ?>
+                        <input <?php if ($fldPopQuizzes == "Pop Quizzes") print " unchecked "; ?>
                             id="chkTagPopQuizzes"
                             name="chkTags"
                             tabindex="420"
@@ -558,7 +604,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                 <p>
                     <label class="check-field">
-                        <input <?php if ($fldTag == "Group Projects") print " unchecked "; ?>
+                        <input <?php if ($fldGroupProjects == "Group Projects") print " unchecked "; ?>
                             id="chkTagGroupProjects"
                             name="chkTags"
                             tabindex="420"
@@ -568,7 +614,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                 <p>
                     <label class="check-field">
-                        <input <?php if ($fldTag == "Participation Matters") print " unchecked "; ?>
+                        <input <?php if ($fldParticipationMatters == "Participation Matters") print " unchecked "; ?>
                             id="chkTagParticipationMatters"
                             name="chkTags"
                             tabindex="420"
@@ -579,7 +625,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                 <p>
                     <label class="check-field">
-                        <input <?php if ($fldTag == "Lots of Homework") print " unchecked "; ?>
+                        <input <?php if ($fldLotsOfHomework == "Lots of Homework") print " unchecked "; ?>
                             id="chkTagLotsofHomework"
                             name="chkTags"
                             tabindex="420"
@@ -589,7 +635,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                 <p>
                     <label class="check-field">
-                        <input <?php if ($fldTag == "Mandatory Attendance") print " unchecked "; ?>
+                        <input <?php if ($fldMandatoryAttendance == "Mandatory Attendance") print " unchecked "; ?>
                             id="chkTagMandatoryAttendance"
                             name="chkTags"
                             tabindex="420"
@@ -599,7 +645,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                 <p>
                     <label class="check-field">
-                        <input <?php if ($fldTag == "Textbook Use") print " unchecked "; ?>
+                        <input <?php if ($fldTextbookUse == "Textbook Use") print " unchecked "; ?>
                             id="chkTagTextbookUse"
                             name="chkTags"
                             tabindex="420"

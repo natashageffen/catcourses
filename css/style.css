@@ -152,6 +152,27 @@ form{
     padding: 20px;
 }
 
+.indexbox{
+    margin: auto;
+    margin: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    float: left;
+    padding: 20px;
+}
+
+
+#error-message{
+    background: rgba(255, 255, 255, 0.8);
+    color: red;
+    
+}
+
+#errors{
+    background: rgba(255, 255, 255, 0.8);
+    color: red;
+    
+}
+
 label{
     color: black;
     margin: 20px;

@@ -31,6 +31,14 @@
         }
         print '><a href="form.php">Review a Course</a></li>';
         
+        
+       print '<li ';
+        if ($PATH_PARTS['filename'] == 'form') {
+            print ' class="activePage" ';
+        }
+        print '><a href="update-delete.php">Browse Recent Reviews</a></li>';
+        
+        
         print '<li ';
         if ($PATH_PARTS['filename'] == 'site-feedback') {
             print ' class="activePage" ';

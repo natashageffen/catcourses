@@ -102,6 +102,12 @@ if (isset($_POST["btnSubmit"])) {
     // will be in the order they appear. errorMsg will be displayed on the form
     // see section 3b. The error flag ($emailERROR) will be used in section 3c.
 
+      ?>
+    
+    <span id="error-message">
+    
+    <?php
+
 
 
     if ($Subj == "" AND !$Number ==""){
@@ -123,6 +129,11 @@ if (isset($_POST["btnSubmit"])) {
     }
 
 
+     ?>
+    
+    </span>
+    
+    <?php
 
 
 
@@ -257,7 +268,7 @@ if (isset($_POST["btnSubmit"])) {
 
     if ($errorMsg) {
         print '<div id="errors">' . PHP_EOL;
-        print '<h2>The following errors that need to be fixed:</h2>' . PHP_EOL;
+        print '<h2 id="errors">The following errors need to be fixed:</h2>' . PHP_EOL;
         print '<ol>' . PHP_EOL;
 
         foreach ($errorMsg as $err) {
@@ -283,11 +294,14 @@ if (isset($_POST["btnSubmit"])) {
     <?php
     $query = "SELECT distinct Subj ";
     $query .= "FROM tblSections ";
-    $query .= "ORDER BY  Subj";
+    $query .= "ORDER BY Subj";
 
 
     // Step Three: run your query being sure to implement security
-    
+     if ($thisDatabaseReader->querySecurityOk($query, 0, 1)) {
+        $query = $thisDatabaseReader->sanitizeQuery($query);
+        $subjects = $thisDatabaseReader->select($query);
+    }
     
 
 
@@ -426,7 +440,7 @@ if (isset($_POST["btnSubmit"])) {
             
     if ($Subj != ""){
         if($where == 0){
-            $query .= 'WHERE ';
+            $query .= ' WHERE ';
             $where = 1;
         } else{
             $query .= ' AND ';
@@ -438,11 +452,9 @@ if (isset($_POST["btnSubmit"])) {
          
     }
     
-    $query = 'SELECT * FROM tblCourses ';
-            
     if ($Number != ""){
         if($where == 0){
-            $query .= 'WHERE ';
+            $query .= ' WHERE ';
             $where = 1;
         } else{
             $query .= ' AND ';
@@ -454,12 +466,10 @@ if (isset($_POST["btnSubmit"])) {
          
     }
     
-    
-    $query = 'SELECT * FROM tblCourses ';
             
     if ($Instructor != ""){
         if($where == 0){
-            $query .= 'WHERE ';
+            $query .= ' WHERE ';
             $where = 1;
         } else{
             $query .= ' AND ';
@@ -471,22 +481,35 @@ if (isset($_POST["btnSubmit"])) {
          
     }
     
+    //print "<p>Line 485";
     
-    
+    //$thisDatabaseReader->testSecurityQuery($query, 1, $and);
     
     if ($thisDatabaseReader->querySecurityOk($query, 1, $and)) {
         $query = $thisDatabaseReader->sanitizeQuery($query);
-        $dataRecord = $thisDatabaseReader->select($query);
+        $dataRecord = $thisDatabaseReader->select($query,$dataRecord);
     }
     
+    ?>
+    
+    <span class="indexbox">
+    
+    <?php
     
     if (is_array($dataRecord)) {
         foreach ($dataRecord as $record) {
-            print '<p>' . $record['fldSubject'] . ' ' . $record['fldNumber'] . ' ' . $record['fldInstructor']. ' ' . $record['fldDifficultyLevel'] . ' ' . $record['fldTag'] . ' ' . $record['fldSkills'] . ' ' . $record['fldComments'] .'</p>';
+             print '<p>' . $record['pmkCourseId'] . ' ' . $record['fldSubject'] . ' ' . $record['fldNumber'] . ' ' . $record['fldInstructor']. ' ' . $record['fldDifficultyLevel'] . ' ' . $record['fldPaperHeavy'] . ' ' . $record['fldReadingHeavy'] . ' ' . $record['fldTestHeavy'] . ' ' . $record['fldPopQuizzes'] . ' ' . $record['fldGroupProjects'] . ' ' . $record['fldParticipationMatters'] . ' ' . $record['fldLotsOfHomework'] . ' ' . $record['fldMandatoryAttendance'] . ' ' . $record['fldTextbookUse'] . ' ' . $record['fldSkills'] . ' ' . $record['fldComments'] . ' ' . $record['fldEmail'] .'</p>';
+        }
+    }
+    if (isset($_POST["btnSubmit"]) AND empty($errorMsg)){
+        if($where == 0){
+            print '<p>No results found.</p>';
         }
     }
 
 ?>
+    
+</span>
 </fieldset>     
 
 

@@ -4,11 +4,16 @@ include 'top.php';
 
 if(isset($_POST['helpful'])) {
  ?>
-    <h1>Thanks for your feedback!</h1>
+    <h1 id="form-head">Thanks for your feedback!</h1>
    <?php
     $email_to = "ngeffen@uvm.edu";
     $email_subject = "Email from website";
  
+    ?>
+    
+    <span id="error-message">
+    
+    <?php
     function died($error) {
         echo "The following error(s) were found with the form you submitted:<br /><br />";
         echo $error."<br /><br />";
@@ -36,9 +41,16 @@ if(isset($_POST['helpful'])) {
     died($error_message);
   }
  
+  
+   ?>
+    
+    </span>
+    
+    <?php
+    
     $email_message = "Form details below.\n\n";
  
-     
+    
     function clean_string($string) {
       $bad = array("content-type","bcc:","to:","cc:","href");
       return str_replace($bad,"",$string);
