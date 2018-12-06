@@ -214,7 +214,7 @@ if (isset($_POST["btnSubmit"])) {
 
 
 
-    if ($_POST ['radDifficultyLevel'] == -1) {
+    if ($fldDifficultyLevel == "") {
         $errorMsg[] = 'Please select a difficulty level.';
         $difficultyLevelERROR = true;
     } elseif (!verifyAlpha($fldDifficultyLevel)) {
@@ -258,6 +258,7 @@ if (isset($_POST["btnSubmit"])) {
         $dataRecord[] = $fldReadingHeavy;
         $dataRecord[] = $fldTestHeavy;
         $dataRecord[] = $fldPopQuizzes;
+        $dataRecord[] = $fldGroupProjects;
         $dataRecord[] = $fldParticipationMatters;
         $dataRecord[] = $fldLotsOfHomework;
         $dataRecord[] = $fldMandatoryAttendance;
@@ -565,8 +566,8 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                 <p>
                     <label class="check-field">
                         <input <?php if ($fldPaperHeavy == "Paper Heavy") print " checked "; ?>
-                            id="chkTagPaperHeavy"
-                            name="chkTags"
+                            id="chkPaperHeavy"
+                            name="chkPaperHeavy"
                             tabindex="420"
                             type="checkbox"
                             value="Paper Heavy">Paper Heavy</label>
@@ -575,8 +576,8 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                 <p>
                     <label class="check-field">
                         <input <?php if ($fldReadingHeavy == "Reading Heavy") print " unchecked "; ?>
-                            id="chkTagReadingHeavy"
-                            name="chkTags"
+                            id="chkReadingHeavy"
+                            name="chkReadingHeavy"
                             tabindex="420"
                             type="checkbox"
                             value="Reading Heavy">Reading Heavy</label>
@@ -585,8 +586,8 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                 <p>
                     <label class="check-field">
                         <input <?php if ($fldTestHeavy == "Test Heavy") print " unchecked "; ?>
-                            id="chkTagTestHeavy"
-                            name="chkTags"
+                            id="chkTestHeavy"
+                            name="chkTestHeavy"
                             tabindex="420"
                             type="checkbox"
                             value="Test Heavy">Test Heavy</label>
@@ -595,8 +596,8 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                 <p>
                     <label class="check-field">
                         <input <?php if ($fldPopQuizzes == "Pop Quizzes") print " unchecked "; ?>
-                            id="chkTagPopQuizzes"
-                            name="chkTags"
+                            id="chkPopQuizzes"
+                            name="chkPopQuizzes"
                             tabindex="420"
                             type="checkbox"
                             value="Pop Quizzes">Pop Quizzes</label>
@@ -605,8 +606,8 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                 <p>
                     <label class="check-field">
                         <input <?php if ($fldGroupProjects == "Group Projects") print " unchecked "; ?>
-                            id="chkTagGroupProjects"
-                            name="chkTags"
+                            id="chkGroupProjects"
+                            name="chkGroupProjects"
                             tabindex="420"
                             type="checkbox"
                             value="Group Projects">Group Projects</label>
@@ -615,8 +616,8 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                 <p>
                     <label class="check-field">
                         <input <?php if ($fldParticipationMatters == "Participation Matters") print " unchecked "; ?>
-                            id="chkTagParticipationMatters"
-                            name="chkTags"
+                            id="chkParticipationMatters"
+                            name="chkParticipationMatters"
                             tabindex="420"
                             type="checkbox"
                             value="Participation Matters">Participation Matters</label>
@@ -626,8 +627,8 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                 <p>
                     <label class="check-field">
                         <input <?php if ($fldLotsOfHomework == "Lots of Homework") print " unchecked "; ?>
-                            id="chkTagLotsofHomework"
-                            name="chkTags"
+                            id="chkLotsOfHomework"
+                            name="chkLotsOfHomework"
                             tabindex="420"
                             type="checkbox"
                             value="Lots of Homework">Lots of Homework</label>
@@ -636,8 +637,8 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                 <p>
                     <label class="check-field">
                         <input <?php if ($fldMandatoryAttendance == "Mandatory Attendance") print " unchecked "; ?>
-                            id="chkTagMandatoryAttendance"
-                            name="chkTags"
+                            id="chkMandatoryAttendance"
+                            name="chkMandatoryAttendance"
                             tabindex="420"
                             type="checkbox"
                             value="Mandatory Attendance">Mandatory Attendance</label>
@@ -646,8 +647,8 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                 <p>
                     <label class="check-field">
                         <input <?php if ($fldTextbookUse == "Textbook Use") print " unchecked "; ?>
-                            id="chkTagTextbookUse"
-                            name="chkTags"
+                            id="chkTextbookUse"
+                            name="chkTextbookUse"
                             tabindex="420"
                             type="checkbox"
                             value="Textbook Use">Textbook Use</label>

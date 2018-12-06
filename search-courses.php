@@ -490,26 +490,23 @@ if (isset($_POST["btnSubmit"])) {
         $dataRecord = $thisDatabaseReader->select($query,$dataRecord);
     }
     
-    ?>
-    
-    <span class="indexbox">
-    
-    <?php
+ 
     
     if (is_array($dataRecord)) {
         foreach ($dataRecord as $record) {
-             print '<p>' . $record['pmkCourseId'] . ' ' . $record['fldSubject'] . ' ' . $record['fldNumber'] . ' ' . $record['fldInstructor']. ' ' . $record['fldDifficultyLevel'] . ' ' . $record['fldPaperHeavy'] . ' ' . $record['fldReadingHeavy'] . ' ' . $record['fldTestHeavy'] . ' ' . $record['fldPopQuizzes'] . ' ' . $record['fldGroupProjects'] . ' ' . $record['fldParticipationMatters'] . ' ' . $record['fldLotsOfHomework'] . ' ' . $record['fldMandatoryAttendance'] . ' ' . $record['fldTextbookUse'] . ' ' . $record['fldSkills'] . ' ' . $record['fldComments'] . ' ' . $record['fldEmail'] .'</p>';
+             print '<p class="indexbox">' . $record['pmkCourseId'] . ' ' . $record['fldSubject'] . ' ' . $record['fldNumber'] . ' ' . $record['fldInstructor']. ' ' . $record['fldDifficultyLevel'] . ' ' . $record['fldPaperHeavy'] . ' ' . $record['fldReadingHeavy'] . ' ' . $record['fldTestHeavy'] . ' ' . $record['fldPopQuizzes'] . ' ' . $record['fldGroupProjects'] . ' ' . $record['fldParticipationMatters'] . ' ' . $record['fldLotsOfHomework'] . ' ' . $record['fldMandatoryAttendance'] . ' ' . $record['fldTextbookUse'] . ' ' . $record['fldSkills'] . ' ' . $record['fldComments'] . ' ' . $record['fldEmail'] .'</p>';
         }
-    }
-    if (isset($_POST["btnSubmit"]) AND empty($errorMsg)){
         if($where == 0){
-            print '<p>No results found.</p>';
+            print '<p>No records found.</p>';
         }
     }
+   
+      
+    
 
 ?>
     
-</span>
+
 </fieldset>     
 
 
