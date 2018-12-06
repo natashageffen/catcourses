@@ -179,9 +179,60 @@ if (isset($_POST["btnSubmit"])) {
 <?php
 //print PHP_EOL . '<!-- SECTION 3 Display Form -->' . PHP_EOL;
 ////
-//?>       
 
-
+//        $dataRecord[] = $searchSubj;
+//        $dataRecord[] = $searchNumber;
+//        $dataRecord[] = $searchInstructor;
+//
+//
+//
+//
+//        print PHP_EOL . '<!-- SECTION: 2f Create message -->' . PHP_EOL;
+//        
+//        $searchSubj = ($_POST['lstSubjects']);
+//        $searchNum = ($_POST['lstNumbers']);
+//        $searchInstructors = ($_POST['lstInstructors']);
+//        
+//      
+//        if(!$Subj == "" AND !$searchSubjectERROR){
+//            $query = 'SELECT * FROM tblCourses';
+//            $query .= 'WHERE lstSubjects = ? ';
+//            }
+//        
+//        if(!$Number == "" AND !$searchNumberERROR){
+//            $query = 'SELECT * FROM tblCourses';
+//            $query .= 'WHERE lstNumbers = ? ';
+//            }
+//        
+//            
+//        if(!$Instructor == "" AND !$searchInstructorERROR){
+//            $query = 'SELECT * FROM tblCourses';
+//            $query .= 'WHERE lstInstructors = ? ';
+//            }
+//        
+//            if ($thisDatabaseReader->querySecurityOk($query, 0, 1)) {
+//        $query = $thisDatabaseReader->sanitizeQuery($query);
+//        $searchResults = $thisDatabaseReader->select($query);
+//    }
+//        
+//        $message = '<h2>Here are your search results:</h2>';
+//        
+            
+            /*
+            
+           $count = mysqli_num_rows($query);
+           if($count == "0"){
+               $message = '<h2>No results found!</h2>';
+           }
+           else{
+               while($row = mysqli_fetch_array($query)){
+		
+                   $s = $row['column_to_display']; 
+				$output .= '<h2>'.$s.'</h2><br>';
+               }
+           }
+             *
+             */
 //<?php
 ////####################################
 ////
@@ -236,10 +287,8 @@ if (isset($_POST["btnSubmit"])) {
 
 
     // Step Three: run your query being sure to implement security
-    if ($thisDatabaseReader->querySecurityOk($query, 0, 1)) {
-        $query = $thisDatabaseReader->sanitizeQuery($query);
-        $subjects = $thisDatabaseReader->select($query);
-    }
+    
+    
 
 
     print '<label for="lstSubjects"';
@@ -367,7 +416,75 @@ if (isset($_POST["btnSubmit"])) {
         </form>     
 
     <?php
-
+    
+    $dataRecord = array();
+    $where = 0;
+    $and = 0;
+    
+    
+    $query = 'SELECT * FROM tblCourses ';
+            
+    if ($Subj != ""){
+        if($where == 0){
+            $query .= 'WHERE ';
+            $where = 1;
+        } else{
+            $query .= ' AND ';
+            $and++;
+        }
+        
+        $query .= 'fldSubject like ? ';
+        $dataRecord[] = $Subj;
+         
+    }
+    
+    $query = 'SELECT * FROM tblCourses ';
+            
+    if ($Number != ""){
+        if($where == 0){
+            $query .= 'WHERE ';
+            $where = 1;
+        } else{
+            $query .= ' AND ';
+            $and++;
+        }
+        
+        $query .= 'fldNumber like ? ';
+        $dataRecord[] = $Number;
+         
+    }
+    
+    
+    $query = 'SELECT * FROM tblCourses ';
+            
+    if ($Instructor != ""){
+        if($where == 0){
+            $query .= 'WHERE ';
+            $where = 1;
+        } else{
+            $query .= ' AND ';
+            $and++;
+        }
+        
+        $query .= 'fldInstructor like ? ';
+        $dataRecord[] = $Instructor;
+         
+    }
+    
+    
+    
+    
+    if ($thisDatabaseReader->querySecurityOk($query, 1, $and)) {
+        $query = $thisDatabaseReader->sanitizeQuery($query);
+        $dataRecord = $thisDatabaseReader->select($query);
+    }
+    
+    
+    if (is_array($dataRecord)) {
+        foreach ($dataRecord as $record) {
+            print '<p>' . $record['fldSubject'] . ' ' . $record['fldNumber'] . ' ' . $record['fldInstructor']. ' ' . $record['fldDifficultyLevel'] . ' ' . $record['fldTag'] . ' ' . $record['fldSkills'] . ' ' . $record['fldComments'] .'</p>';
+        }
+    }
 
 ?>
 </fieldset>     
