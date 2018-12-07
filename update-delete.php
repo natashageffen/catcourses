@@ -19,6 +19,7 @@ if ($thisDatabaseReader->querySecurityOk($query, 0,1)) {
 }
 ?>
 
+
 <?php
 if (DEBUG) {
     print '<p>Contents of the array<pre>';
@@ -33,9 +34,10 @@ print '<h2 class="alternateRows">Records</h2>';
 
 if (is_array($records)) {
     foreach ($records as $record) {
-        print '<p>' . $record['pmkCourseId'] . ' ' . $record['fldSubject'] . ' ' . $record['fldNumber'] . ' ' . $record['fldInstructor']. ' ' . $record['fldDifficultyLevel'] . ' ' . $record['fldPaperHeavy'] . ' ' . $record['fldReadingHeavy'] . ' ' . $record['fldTestHeavy'] . ' ' . $record['fldPopQuizzes'] . ' ' . $record['fldGroupProjects'] . ' ' . $record['fldParticipationMatters'] . ' ' . $record['fldLotsOfHomework'] . ' ' . $record['fldMandatoryAttendance'] . ' ' . $record['fldTextbookUse'] . ' ' . $record['fldSkills'] . ' ' . $record['fldComments'] . ' ' . $record['fldEmail'] .'</p>';
+        print '<p>' . $record['fldSubject'] . ' ' . $record['fldNumber'] . ', ' . $record['fldInstructor']. ': ' . $record['fldDifficultyLevel'] . ', ' . $record['fldPaperHeavy'] . ' ' . $record['fldReadingHeavy'] . ' ' . $record['fldTestHeavy'] . ' ' . $record['fldPopQuizzes'] . ' ' . $record['fldGroupProjects'] . ' ' . $record['fldParticipationMatters'] . ' ' . $record['fldLotsOfHomework'] . ' ' . $record['fldMandatoryAttendance'] . ' ' . $record['fldTextbookUse'] . ' SKILLS LEARNED: ' . $record['fldSkills'] . ' COMMENTS: ' . $record['fldComments'] .'</p>';
         if ($isAdmin == true){
         echo '<a href="form.php?id='. $record["pmkCourseId"] . '">EDIT TABLE</a>';
+        
 }
         
       

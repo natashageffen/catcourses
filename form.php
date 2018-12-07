@@ -268,7 +268,6 @@ if (isset($_POST["btnSubmit"])) {
         $dataRecord[] = $fldEmail;
 
 
-        print_r($dataRecord);
 
 
         if ($update) {
@@ -303,7 +302,7 @@ if (isset($_POST["btnSubmit"])) {
                 $records = $thisDatabaseWriter->update($query, $dataRecord);
             }
         } else {
-            $thisDatabaseWriter->testSecurityQuery($query, 0);
+            //$thisDatabaseWriter->testSecurityQuery($query, 0);
             if ($thisDatabaseWriter->querySecurityOk($query, 0)) {
                 $query = $thisDatabaseReader->sanitizeQuery($query);
                 $records = $thisDatabaseWriter->insert($query, $dataRecord);
@@ -311,25 +310,26 @@ if (isset($_POST["btnSubmit"])) {
         }
         if ($records) {
             if ($update) {
-                print '<p>Record updated</p>';
+                print '<p class="indexbox">Record updated</p>';
             } else {
 
 
-                print '<p>Record Saved</p>';
+                print '<p class="indexbox">Record Saved</p>';
             }
         } else {
-            print '<p>Record NOT Saved</p>';
-            print_r($dataRecord);
+            print '<p class="indexbox">Record NOT Saved</p>';
+           
         }
 
         print PHP_EOL . '<!-- SECTION: 2f Create message -->' . PHP_EOL;
-
-
-        $message = '<h2>Your  information:</h2>';
+        ?>
+       
+<?php
+        $message = '<h2 class="indexbox">Your  information:</h2>';
 
         foreach ($_POST as $htmlName => $value) {
 
-            $message .= '<p>';
+            $message .= '<p class="indexbox">';
 
             $camelCase = preg_split('/(?=[A-Z])/', substr($htmlName, 3));
 
@@ -339,6 +339,9 @@ if (isset($_POST["btnSubmit"])) {
 
             $message .= ' = ' . htmlentities($value, ENT_QUOTES, "UTF-8") . '</p>';
         }
+        ?>
+              
+            <?php
     } // end form is valid     
 }   // ends if form was submitted.
 //#############################################################################
@@ -553,7 +556,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                 </p>
 
                 <p>
-                    <label class="radio-field"><input type="radio" id="radDifficultyLevelVeryHard" name="radDifficultyLevel" value="VeryHard" tabindex="574" 
+                    <label class="radio-field"><input type="radio" id="radDifficultyLevelVeryHard" name="radDifficultyLevel" value="Very Hard" tabindex="574" 
     <?php if ($fldDifficultyLevel == "VeryHard") echo ' checked="checked" '; ?>>
                         Very Hard </label>
                 </p>
@@ -667,8 +670,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                 <p>
                     <label>Skills you learned in this course: (optional)</label>
-
-                    <input 
+                    <textarea
 
                         id = "txtSkills"     
                         name = "txtSkills"
@@ -681,7 +683,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                         cols="25" 
                         rows="6"
                         >
-
+                    </textarea>
                 </p>     
             </fieldset> 
 
@@ -691,8 +693,7 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
 
                 <p>
                     <label>Additional Comments: (optional)</label>
-
-                    <input 
+                    <textarea
 
                         id = "txtComments"     
                         maxlength="1000" 
@@ -705,18 +706,17 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                         type = "text"
                         value = "<?php print $fldComments; ?>"
                         >
-
+                    </textarea>
                 </p>     
             </fieldset> 
 
 
-            <fieldset class = "comments">
+            <fieldset class = "email">
 
 
                 <p>
 
                     <label>Email address: (Optional)</label>
-
                     <input 
 
                         id = "txtEmail"     
@@ -728,7 +728,6 @@ if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked w
                         type = "text"
                         value = "<?php print $fldEmail; ?>"
                         >
-
                 </p>     
             </fieldset>
 

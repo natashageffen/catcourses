@@ -288,7 +288,7 @@ if (isset($_POST["btnSubmit"])) {
               method = "post"
               
               >
-            <h2> Search by Course: </h2>
+            <h2> Search for a Course: </h2>
             <fieldset class="listbox <?php if ($subjectERROR) print ' mistake'; ?>">
 
     <?php
@@ -376,7 +376,7 @@ if (isset($_POST["btnSubmit"])) {
 
             </fieldset>
                 
-            <h2> Search by Instructor: </h2>
+          
             
             <fieldset class="listbox <?php if ($instructorERROR) print ' mistake'; ?>">
 
@@ -489,23 +489,30 @@ if (isset($_POST["btnSubmit"])) {
         $query = $thisDatabaseReader->sanitizeQuery($query);
         $dataRecord = $thisDatabaseReader->select($query,$dataRecord);
     }
+    ?>
     
- 
+    
+    
+    <span class="indexbox">
+    <?php
+     
+    print '<p>' . $where . ' records found.</p>';
     
     if (is_array($dataRecord)) {
         foreach ($dataRecord as $record) {
-             print '<p class="indexbox">' . $record['pmkCourseId'] . ' ' . $record['fldSubject'] . ' ' . $record['fldNumber'] . ' ' . $record['fldInstructor']. ' ' . $record['fldDifficultyLevel'] . ' ' . $record['fldPaperHeavy'] . ' ' . $record['fldReadingHeavy'] . ' ' . $record['fldTestHeavy'] . ' ' . $record['fldPopQuizzes'] . ' ' . $record['fldGroupProjects'] . ' ' . $record['fldParticipationMatters'] . ' ' . $record['fldLotsOfHomework'] . ' ' . $record['fldMandatoryAttendance'] . ' ' . $record['fldTextbookUse'] . ' ' . $record['fldSkills'] . ' ' . $record['fldComments'] . ' ' . $record['fldEmail'] .'</p>';
+        print '<p>' . $record['fldSubject'] . ' ' . $record['fldNumber'] . ', ' . $record['fldInstructor']. ': ' . $record['fldDifficultyLevel'] . ', ' . $record['fldPaperHeavy'] . ' ' . $record['fldReadingHeavy'] . ' ' . $record['fldTestHeavy'] . ' ' . $record['fldPopQuizzes'] . ' ' . $record['fldGroupProjects'] . ' ' . $record['fldParticipationMatters'] . ' ' . $record['fldLotsOfHomework'] . ' ' . $record['fldMandatoryAttendance'] . ' ' . $record['fldTextbookUse'] . ' SKILLS LEARNED: ' . $record['fldSkills'] . ' COMMENTS: ' . $record['fldComments'] .'</p>';
         }
-        if($where == 0){
-            print '<p>No records found.</p>';
-        }
+     
+           
+        
     }
    
+    
       
     
 
 ?>
-    
+        </span>
 
 </fieldset>     
 
